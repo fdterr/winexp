@@ -25,36 +25,61 @@ export const games = () => async dispatch => {
     );
     const games = data.dates[0].games;
 
-    const promises = [];
+    const linePromises = [];
     for (let i = 0; i < games.length; i++) {
       const linePromise = lineScore(games[i].gamePk);
-      promises.push(linePromise);
+      linePromises.push(linePromise);
     }
 
-    await Promise.all(promises);
+    const liveFeedPromises = [];
+    for (let i = 0; i < games.length; i++) {
+      const livePromise = liveFeed(games[i].gamePk);
+      liveFeedPromises.push(livePromise);
+    }
+
+    await Promise.all(linePromises);
+    await Promise.all(liveFeedPromises);
+
+    console.log('linePromises', linePromises);
+    console.log('liveFeedPromises', liveFeedPromises);
 
     const lineScores = [];
-    for (let i = 0; i < promises.length; i++) {
-      lineScores.push(await promises[i]);
+    const liveFeeds = [];
+    for (let i = 0; i < linePromises.length; i++) {
+      lineScores.push(await linePromises[i]);
+      liveFeeds.push(await liveFeedPromises[i]);
     }
 
+    console.log('liveFeeds are', liveFeeds);
+
     for (let i = 0; i < lineScores.length; i++) {
-      let currentGame = lineScores[i];
+      let currentLineScore = lineScores[i];
+      let currentLiveFeed = liveFeeds[i];
+
       let game = newGame();
       game.homeTeam = games[i].teams.home.team.name;
       game.awayTeam = games[i].teams.away.team.name;
-      game.pitcher = pitcher(currentGame);
-      game.batter = batter(currentGame);
-      game.currentInning = currentInning(currentGame);
-      game.runners = runners(currentGame);
-      game.homeScore = score(currentGame).homeScore;
-      game.awayScore = score(currentGame).awayScore;
-      game.inningTop = topOfInning(currentGame);
-      game.outs = situation(currentGame).outs;
-      game.balls = situation(currentGame).balls;
-      game.strikes = situation(currentGame).strikes;
+      game.pitcher = pitcher(currentLineScore);
+      game.batter = batter(currentLineScore);
+      game.currentInning = currentInning(currentLineScore);
+      game.runners = runners(currentLineScore);
+      game.homeScore = score(currentLineScore).homeScore;
+      game.awayScore = score(currentLineScore).awayScore;
+      game.inningTop = topOfInning(currentLineScore);
+      game.outs = situation(currentLineScore).outs;
+      game.balls = situation(currentLineScore).balls;
+      game.strikes = situation(currentLineScore).strikes;
       game.status = games[i].status.abstractGameState;
-      game.teamStats = teamStats(currentGame);
+      game.teamStats = teamStats(currentLineScore);
+      game.preview = {};
+
+      // console.log('preview?', game.status == 'Preview');
+      if (game.status == 'Preview') {
+        const {homeProbable, awayProbable} = probablePitchers(currentLiveFeed);
+        // console.log('homeProbable', homeProbable);
+        game.homeProbable = homeProbable.fullName;
+        game.awayProbable = awayProbable.fullName;
+      }
 
       console.log('new game is', game);
       returnGames.push(game);
@@ -101,6 +126,14 @@ const lineScore = async gamePk => {
   const {data} = await axios.get(
     `http://statsapi.mlb.com/api/v1/game/${gamePk}/linescore`
   );
+  return data;
+};
+
+const liveFeed = async gamePk => {
+  const {data} = await axios.get(
+    `http://statsapi.mlb.com/api/v1/game/${gamePk}/feed/live`
+  );
+  // console.log('live feed data is', data);
   return data;
 };
 
@@ -155,5 +188,12 @@ const teamStats = lineScore => {
       runs: lineScore.teams.away.runs,
       errors: lineScore.teams.away.errors
     }
+  };
+};
+
+const probablePitchers = game => {
+  return {
+    homeProbable: game.gameData.probablePitchers.home,
+    awayProbable: game.gameData.probablePitchers.away
   };
 };

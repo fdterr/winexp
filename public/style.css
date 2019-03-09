@@ -26,6 +26,8 @@ form div {
   width: 90vw;
   margin-left: auto;
   margin-right: auto;
+  /* margin-top: auto !important; */
+  /* margin: auto !important; */
 }
 
 .gameCard {
@@ -38,8 +40,27 @@ form div {
   width: 95% !important;
   margin-left: auto !important;
   margin-right: auto !important;
+  margin-top: auto !important;
+  margin-bottom: 2px !important;
 }
 
 .teamStats {
   text-align: center !important;
+}
+
+.content {
+  padding-bottom: 5px !important;
+}
+
+.icon {
+  width: 16px;
+  margin-right: 2px;
+  /* border: 1px solid red; */
+  text-align: center;
+}
+
+.teamName {
+  display: flex;
+  justify-content: flex-start;
+  width: 100%;
 }
