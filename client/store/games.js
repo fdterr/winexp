@@ -50,6 +50,12 @@ export const games = () => async dispatch => {
       game.homeScore = score(currentGame).homeScore;
       game.awayScore = score(currentGame).awayScore;
       game.inningTop = topOfInning(currentGame);
+      game.outs = situation(currentGame).outs;
+      game.balls = situation(currentGame).balls;
+      game.strikes = situation(currentGame).strikes;
+      game.status = games[i].status.abstractGameState;
+      game.teamStats = teamStats(currentGame);
+
       console.log('new game is', game);
       returnGames.push(game);
     }
@@ -126,5 +132,28 @@ const score = lineScore => {
   return {
     homeScore: lineScore.teams.home.runs,
     awayScore: lineScore.teams.away.runs
+  };
+};
+
+const situation = lineScore => {
+  return {
+    outs: lineScore.outs,
+    strikes: lineScore.strikes,
+    balls: lineScore.balls
+  };
+};
+
+const teamStats = lineScore => {
+  return {
+    home: {
+      hits: lineScore.teams.home.hits,
+      runs: lineScore.teams.home.runs,
+      errors: lineScore.teams.home.errors
+    },
+    away: {
+      hits: lineScore.teams.away.hits,
+      runs: lineScore.teams.away.runs,
+      errors: lineScore.teams.away.errors
+    }
   };
 };
