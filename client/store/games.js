@@ -76,14 +76,14 @@ export const games = () => async dispatch => {
       // console.log('preview?', game.status == 'Preview');
       if (game.status == 'Preview') {
         const {homeProbable, awayProbable} = probablePitchers(currentLiveFeed);
-        // console.log('homeProbable', homeProbable);
-        game.homeProbable = homeProbable.fullName;
-        game.awayProbable = awayProbable.fullName;
+        console.log('homeProbable', homeProbable);
+        game.homeProbable = homeProbable;
+        game.awayProbable = awayProbable;
       }
 
-      console.log('new game is', game);
       returnGames.push(game);
     }
+    console.log('new game is', returnGames[0]);
 
     dispatch(getGames(returnGames));
   } catch (err) {

@@ -26,6 +26,7 @@ form div {
   width: 90vw;
   margin-left: auto;
   margin-right: auto;
+  justify-content: center;
   /* margin-top: auto !important; */
   /* margin: auto !important; */
 }
@@ -33,7 +34,8 @@ form div {
 .gameCard {
   /* margin-left: 5px; */
   /* margin-right: 5px; */
-  margin: 5px !important;
+  margin: 10px !important;
+  width: 350px !important;
 }
 
 .lineScore {
@@ -63,4 +65,30 @@ form div {
   display: flex;
   justify-content: flex-start;
   width: 100%;
+}
+
+.situation {
+  display: flex;
+  justify-content: space-around;
+}
+
+.mugshot {
+  border-radius: 6px;
+  border-top-left-radius: 6px;
+  border-top-right-radius: 6px;
+  border-bottom-right-radius: 6px;
+  border-bottom-left-radius: 6px;
+  width: 62px;
+}
+
+.situationPlayer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.ball {
+  content: ' \25CF';
+  font-size: 200px;
 }

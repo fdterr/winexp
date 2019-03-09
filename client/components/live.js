@@ -14,7 +14,7 @@ const Live = props => {
         })
       ) : (
         <div>Something</div>
-      )})}
+      )}
     </div>
   );
 };
