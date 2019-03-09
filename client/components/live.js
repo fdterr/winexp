@@ -7,7 +7,7 @@ const Live = props => {
     ? console.log('prop games', props.games)
     : console.log('no games');
   return (
-    <div>
+    <div className="cardTable">
       {props.games.length ? (
         props.games.map(game => {
           return <GameCard game={game} />;

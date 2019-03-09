@@ -19,3 +19,27 @@ form div {
   margin: 1em;
   display: inline-block;
 }
+
+.cardTable {
+  display: flex;
+  flex-wrap: wrap;
+  width: 90vw;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.gameCard {
+  /* margin-left: 5px; */
+  /* margin-right: 5px; */
+  margin: 5px !important;
+}
+
+.lineScore {
+  width: 95% !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+
+.teamStats {
+  text-align: center !important;
+}
