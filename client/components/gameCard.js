@@ -45,7 +45,13 @@ const GameCard = props => {
   return (
     <Card className="gameCard">
       <Card.Content>
-        <Card.Header>{props.game.status}</Card.Header>
+        <Card.Header>
+          {props.game.status} -{' '}
+          {props.game.status == 'Final'
+            ? ''
+            : props.game.inningTop ? 'Top ' : 'Bot. '}
+          {props.game.inning}
+        </Card.Header>
         <Table className="lineScore" basic="very" celled collapsing>
           <Table.Body>
             {/* Runs, Hits Errors (Top Row) */}
@@ -59,6 +65,26 @@ const GameCard = props => {
               </Table.Cell>
               <Table.Cell className="teamStats">
                 <strong>E</strong>
+              </Table.Cell>
+            </Table.Row>
+            {/* Away Team */}
+            <Table.Row>
+              <Table.Cell>
+                <div className="teamName">
+                  <div className="icon">
+                    <i className={awayTeam} />
+                  </div>
+                  {props.game.awayTeam}
+                </div>
+              </Table.Cell>
+              <Table.Cell className="teamStats">
+                {props.game.teamStats.away.runs}
+              </Table.Cell>
+              <Table.Cell className="teamStats">
+                {props.game.teamStats.away.hits}
+              </Table.Cell>
+              <Table.Cell className="teamStats">
+                {props.game.teamStats.away.errors}
               </Table.Cell>
             </Table.Row>
             {/* Home Team */}
@@ -81,26 +107,6 @@ const GameCard = props => {
                 {props.game.teamStats.home.errors}
               </Table.Cell>
             </Table.Row>
-            {/* Away Team */}
-            <Table.Row>
-              <Table.Cell>
-                <div className="teamName">
-                  <div className="icon">
-                    <i className={awayTeam} />{' '}
-                  </div>
-                  {props.game.awayTeam}
-                </div>
-              </Table.Cell>
-              <Table.Cell className="teamStats">
-                {props.game.teamStats.away.runs}
-              </Table.Cell>
-              <Table.Cell className="teamStats">
-                {props.game.teamStats.away.hits}
-              </Table.Cell>
-              <Table.Cell className="teamStats">
-                {props.game.teamStats.away.errors}
-              </Table.Cell>
-            </Table.Row>
           </Table.Body>
         </Table>
       </Card.Content>
@@ -109,20 +115,20 @@ const GameCard = props => {
           <h5>Probable Pitchers</h5>
           <div className="situation">
             <div>
-              <div>{props.game.homeProbable.fullName}</div>
-              <img
-                className="mugshot"
-                src={`https://gd.mlb.com/images/gameday/mugshots/mlb/${
-                  props.game.homeProbable.id
-                }.jpg`}
-              />
-            </div>
-            <div>
               <div>{props.game.awayProbable.fullName}</div>
               <img
                 className="mugshot"
                 src={`https://gd.mlb.com/images/gameday/mugshots/mlb/${
                   props.game.awayProbable.id
+                }.jpg`}
+              />
+            </div>
+            <div>
+              <div>{props.game.homeProbable.fullName}</div>
+              <img
+                className="mugshot"
+                src={`https://gd.mlb.com/images/gameday/mugshots/mlb/${
+                  props.game.homeProbable.id
                 }.jpg`}
               />
             </div>
@@ -155,8 +161,11 @@ const GameCard = props => {
                   <td>
                     <strong>S</strong>
                   </td>
+                  <td>
+                    <strong>O</strong>
+                  </td>
                 </tr>
-                {makeBallsStrikes}
+                {makeBallsStrikes(props.game)}
               </tbody>
             </table>
             <div className="situationPlayer">
@@ -186,25 +195,48 @@ const GameCard = props => {
 export default GameCard;
 
 const makeBallsStrikes = game => {
+  if (game.status == 'Live') {
+    console.log('inside bS', game.balls, game.strikes);
+  }
   const bS = [];
-  const max = maxBs(game);
+  const max = maxBSO(game);
   for (let i = 0; i < max; i++) {
     bS.push(
       <tr>
         {game.balls >= i + 1 ? (
           <td>
-            <div className="ball" />
+            <div className="pitch ball" />
           </td>
         ) : (
           <td>
-            <div />i
+            <div />
+          </td>
+        )}
+        {game.strikes >= i + 1 ? (
+          <td>
+            <div className="pitch strike" />
+          </td>
+        ) : (
+          <td>
+            <div />
+          </td>
+        )}
+        {game.outs >= i + 1 ? (
+          <td>
+            <div className="pitch out" />
+          </td>
+        ) : (
+          <td>
+            <div />
           </td>
         )}
       </tr>
     );
   }
+  console.log('returning', bS);
+  return bS;
 };
 
-const maxBs = game => {
-  return Math.max(game.balls, game.strikes);
+const maxBSO = game => {
+  return Math.max(game.balls, game.strikes, game.outs);
 };

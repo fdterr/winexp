@@ -61,7 +61,7 @@ export const games = () => async dispatch => {
       game.awayTeam = games[i].teams.away.team.name;
       game.pitcher = pitcher(currentLineScore);
       game.batter = batter(currentLineScore);
-      game.currentInning = currentInning(currentLineScore);
+      game.inning = currentInning(currentLineScore);
       game.runners = runners(currentLineScore);
       game.homeScore = score(currentLineScore).homeScore;
       game.awayScore = score(currentLineScore).awayScore;

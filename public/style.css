@@ -88,7 +88,20 @@ form div {
   justify-content: flex-start;
 }
 
+.pitch {
+  height: 8px;
+  width: 8px;
+  border-radius: 50%;
+  display: inline-block;
+}
 .ball {
-  content: ' \25CF';
-  font-size: 200px;
+  background-color: green;
+}
+
+.strike {
+  background-color: red;
+}
+
+.out {
+  background-color: orange;
 }
