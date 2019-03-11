@@ -1,5 +1,6 @@
 import React from 'react';
 import {Card} from 'semantic-ui-react';
+import PlayerCard from './playerCard';
 
 const LiveCard = props => {
   return (
@@ -7,16 +8,10 @@ const LiveCard = props => {
       <div className="situation">
         <div className="situationPlayer">
           <strong>Pitching</strong>
-          {props.game.pitcher.fullName}
-          <img
-            className="mugshot"
-            src={`https://gd.mlb.com/images/gameday/mugshots/mlb/${
-              props.game.pitcher.id
-            }.jpg`}
-            onError={e => {
-              e.target.onerror = null;
-              e.target.src =
-                'https://prod-gameday.mlbstatic.com/responsive-gameday-assets/1.2.0/images/players/player-default@2x.png';
+          <PlayerCard
+            player={{
+              fullName: props.game.pitcher.fullName,
+              id: props.game.pitcher.id
             }}
           />
         </div>
@@ -38,16 +33,10 @@ const LiveCard = props => {
         </table>
         <div className="situationPlayer">
           <strong>Batting</strong>
-          {props.game.batter.fullName}
-          <img
-            className="mugshot"
-            src={`https://gd.mlb.com/images/gameday/mugshots/mlb/${
-              props.game.batter.id
-            }.jpg`}
-            onError={e => {
-              e.target.onerror = null;
-              e.target.src =
-                'https://prod-gameday.mlbstatic.com/responsive-gameday-assets/1.2.0/images/players/player-default@2x.png';
+          <PlayerCard
+            player={{
+              fullName: props.game.batter.fullName,
+              id: props.game.batter.id
             }}
           />
         </div>

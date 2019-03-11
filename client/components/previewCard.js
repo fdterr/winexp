@@ -1,5 +1,6 @@
 import React from 'react';
 import {Card} from 'semantic-ui-react';
+import PlayerCard from './playerCard';
 
 const PreviewCard = props => {
   console.log('previewProps', props);
@@ -10,24 +11,19 @@ const PreviewCard = props => {
       </strong>
 
       <div className="situation">
-        <div className="flexCenter">
-          <div>{props.preview.awayProbable.fullName}</div>
-          <img
-            className="mugshot"
-            src={`https://gd.mlb.com/images/gameday/mugshots/mlb/${
-              props.preview.awayProbable.id
-            }.jpg`}
-          />
-        </div>
-        <div className="flexCenter">
-          <div>{props.preview.homeProbable.fullName}</div>
-          <img
-            className="mugshot"
-            src={`https://gd.mlb.com/images/gameday/mugshots/mlb/${
-              props.preview.homeProbable.id
-            }.jpg`}
-          />
-        </div>
+        <PlayerCard
+          player={{
+            fullName: props.preview.awayProbable.fullName,
+            id: props.preview.awayProbable.id
+          }}
+        />
+        <PlayerCard
+          player={{
+            fullName: props.preview.homeProbable.fullName,
+            id: props.preview.homeProbable.id
+          }}
+        />
+        {/* </div> */}
       </div>
     </Card.Content>
   );
