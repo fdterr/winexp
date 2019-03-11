@@ -36,6 +36,8 @@ form div {
   /* margin-right: 5px; */
   margin: 10px !important;
   width: 350px !important;
+  /* display: flex !important; */
+  /* flex-direction: column !important; */
 }
 
 .lineScore {
@@ -44,6 +46,8 @@ form div {
   margin-right: auto !important;
   margin-top: auto !important;
   margin-bottom: 2px !important;
+  display: flex;
+  flex-direction: row;
 }
 
 .teamStats {
@@ -69,7 +73,7 @@ form div {
 
 .situation {
   display: flex;
-  justify-content: space-around;
+  justify-content: space-evenly;
 }
 
 .mugshot {
@@ -104,4 +108,26 @@ form div {
 
 .out {
   background-color: orange;
+}
+
+.notBall {
+  border: 1px solid green;
+}
+
+.notStrike {
+  border: 1px solid red;
+}
+
+.notOut {
+  border: 1px solid orange;
+}
+
+.gameTable {
+  width: 100% !important;
+}
+
+.flexCenter {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }

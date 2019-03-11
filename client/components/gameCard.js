@@ -1,5 +1,7 @@
 import React from 'react';
 import {Card, Table} from 'semantic-ui-react';
+import PreviewCard from './previewCard';
+import LiveCard from './LiveCard';
 
 const nameAbbrevMatch = {
   'Boston Red Sox': 'BOS',
@@ -52,8 +54,10 @@ const GameCard = props => {
             : props.game.inningTop ? 'Top ' : 'Bot. '}
           {props.game.inning}
         </Card.Header>
-        <Table className="lineScore" basic="very" celled collapsing>
-          <Table.Body>
+        <Table className="lineScore" basic="very" celled collapsing unstackable>
+          {/* <div id="one"> */}
+          {/* <div id="two"> */}
+          <Table.Body className="gameTable">
             {/* Runs, Hits Errors (Top Row) */}
             <Table.Row>
               <Table.Cell />
@@ -108,83 +112,19 @@ const GameCard = props => {
               </Table.Cell>
             </Table.Row>
           </Table.Body>
+          {/* </div> */}
+          {/* </div> */}
         </Table>
       </Card.Content>
       {props.game.status == 'Preview' ? (
-        <Card.Content>
-          <h5>Probable Pitchers</h5>
-          <div className="situation">
-            <div>
-              <div>{props.game.awayProbable.fullName}</div>
-              <img
-                className="mugshot"
-                src={`https://gd.mlb.com/images/gameday/mugshots/mlb/${
-                  props.game.awayProbable.id
-                }.jpg`}
-              />
-            </div>
-            <div>
-              <div>{props.game.homeProbable.fullName}</div>
-              <img
-                className="mugshot"
-                src={`https://gd.mlb.com/images/gameday/mugshots/mlb/${
-                  props.game.homeProbable.id
-                }.jpg`}
-              />
-            </div>
-          </div>
-        </Card.Content>
+        <PreviewCard
+          preview={{
+            homeProbable: props.game.homeProbable,
+            awayProbable: props.game.awayProbable
+          }}
+        />
       ) : props.game.status == 'Live' ? (
-        <Card.Content>
-          <div className="situation">
-            <div className="situationPlayer">
-              <strong>Pitching</strong>
-              {props.game.pitcher.fullName}
-              <img
-                className="mugshot"
-                src={`https://gd.mlb.com/images/gameday/mugshots/mlb/${
-                  props.game.pitcher.id
-                }.jpg`}
-                onError={e => {
-                  e.target.onerror = null;
-                  e.target.src =
-                    'https://prod-gameday.mlbstatic.com/responsive-gameday-assets/1.2.0/images/players/player-default@2x.png';
-                }}
-              />
-            </div>
-            <table>
-              <tbody>
-                <tr>
-                  <td>
-                    <strong>B</strong>
-                  </td>
-                  <td>
-                    <strong>S</strong>
-                  </td>
-                  <td>
-                    <strong>O</strong>
-                  </td>
-                </tr>
-                {makeBallsStrikes(props.game)}
-              </tbody>
-            </table>
-            <div className="situationPlayer">
-              <strong>Batting</strong>
-              {props.game.batter.fullName}
-              <img
-                className="mugshot"
-                src={`https://gd.mlb.com/images/gameday/mugshots/mlb/${
-                  props.game.batter.id
-                }.jpg`}
-                onError={e => {
-                  e.target.onerror = null;
-                  e.target.src =
-                    'https://prod-gameday.mlbstatic.com/responsive-gameday-assets/1.2.0/images/players/player-default@2x.png';
-                }}
-              />
-            </div>
-          </div>
-        </Card.Content>
+        <LiveCard game={props.game} />
       ) : (
         <div />
       )}
@@ -193,50 +133,3 @@ const GameCard = props => {
 };
 
 export default GameCard;
-
-const makeBallsStrikes = game => {
-  if (game.status == 'Live') {
-    console.log('inside bS', game.balls, game.strikes);
-  }
-  const bS = [];
-  const max = maxBSO(game);
-  for (let i = 0; i < max; i++) {
-    bS.push(
-      <tr>
-        {game.balls >= i + 1 ? (
-          <td>
-            <div className="pitch ball" />
-          </td>
-        ) : (
-          <td>
-            <div />
-          </td>
-        )}
-        {game.strikes >= i + 1 ? (
-          <td>
-            <div className="pitch strike" />
-          </td>
-        ) : (
-          <td>
-            <div />
-          </td>
-        )}
-        {game.outs >= i + 1 ? (
-          <td>
-            <div className="pitch out" />
-          </td>
-        ) : (
-          <td>
-            <div />
-          </td>
-        )}
-      </tr>
-    );
-  }
-  console.log('returning', bS);
-  return bS;
-};
-
-const maxBSO = game => {
-  return Math.max(game.balls, game.strikes, game.outs);
-};
