@@ -40,17 +40,12 @@ export const games = () => async dispatch => {
     await Promise.all(linePromises);
     await Promise.all(liveFeedPromises);
 
-    console.log('linePromises', linePromises);
-    console.log('liveFeedPromises', liveFeedPromises);
-
     const lineScores = [];
     const liveFeeds = [];
     for (let i = 0; i < linePromises.length; i++) {
       lineScores.push(await linePromises[i]);
       liveFeeds.push(await liveFeedPromises[i]);
     }
-
-    console.log('liveFeeds are', liveFeeds);
 
     for (let i = 0; i < lineScores.length; i++) {
       let currentLineScore = lineScores[i];
@@ -83,8 +78,22 @@ export const games = () => async dispatch => {
 
       returnGames.push(game);
     }
-    console.log('new game is', returnGames[0]);
+    // console.log('new game is', returnGames[0]);
 
+    returnGames.sort((a, b) => {
+      if (a.status == b.status) {
+        return 0;
+      } else if (b.status == 'Final') {
+        return -1;
+      } else if (a.status == 'Final') {
+        return 1;
+      } else if (b.status == 'Preview') {
+        return -1;
+      } else {
+        return 1;
+      }
+    });
+    console.log('store games are', returnGames);
     dispatch(getGames(returnGames));
   } catch (err) {
     console.error(err);

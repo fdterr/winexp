@@ -48,9 +48,9 @@ const LiveCard = props => {
 export default LiveCard;
 
 const makeBallsStrikes = game => {
-  if (game.status == 'Live') {
-    console.log('inside bS', game.balls, game.strikes);
-  }
+  // if (game.status == 'Live') {
+  //   console.log('inside bS', game.balls, game.strikes);
+  // }
   const bS = [];
   // const max = maxBSO(game);
   const max = 4;
@@ -95,7 +95,7 @@ const makeBallsStrikes = game => {
       </tr>
     );
   }
-  console.log('returning', bS);
+  // console.log('returning', bS);
   return bS;
 };
 

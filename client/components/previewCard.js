@@ -3,7 +3,7 @@ import {Card} from 'semantic-ui-react';
 import PlayerCard from './playerCard';
 
 const PreviewCard = props => {
-  console.log('previewProps', props);
+  // console.log('previewProps', props);
   return (
     <Card.Content>
       <strong>

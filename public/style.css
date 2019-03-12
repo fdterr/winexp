@@ -44,10 +44,11 @@ form div {
   width: 95% !important;
   margin-left: auto !important;
   margin-right: auto !important;
-  margin-top: auto !important;
+  /* margin-top: auto !important; */
   margin-bottom: 2px !important;
-  display: flex;
-  flex-direction: row;
+  /* display: flex; */
+  /* flex-direction: row; */
+  /* justify-content: center !important; */
 }
 
 .teamStats {
@@ -130,4 +131,10 @@ form div {
   display: flex;
   flex-direction: column;
   align-items: center;
+}
+
+.flexCenterRow {
+  display: flex;
+  justify-content: center;
+  flex-wrap: true;
 }
