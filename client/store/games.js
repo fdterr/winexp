@@ -1,17 +1,23 @@
 import axios from 'axios';
 
 const initialState = {
-  games: []
+  games: [],
+  stats: {
+    pitchers: {},
+    hitters: {}
+  }
 };
 /**
  * Action Types
  */
 const GAMES = 'GAMES';
+const GET_STATS = 'GET_STATS';
 
 /**
  * Action Creators
  */
 const getGames = games => ({type: GAMES, games});
+const getStats = stats => ({type: GET_STATS, stats});
 
 /**
  * Thunk Creators
@@ -71,7 +77,7 @@ export const games = () => async dispatch => {
       // console.log('preview?', game.status == 'Preview');
       if (game.status == 'Preview') {
         const {homeProbable, awayProbable} = probablePitchers(currentLiveFeed);
-        console.log('homeProbable', homeProbable);
+        // console.log('homeProbable', homeProbable);
         game.homeProbable = homeProbable;
         game.awayProbable = awayProbable;
       }
@@ -93,8 +99,29 @@ export const games = () => async dispatch => {
         return 1;
       }
     });
-    console.log('store games are', returnGames);
+    // console.log('store games are', returnGames);
     dispatch(getGames(returnGames));
+  } catch (err) {
+    console.error(err);
+  }
+};
+
+export const stats = profile => async dispatch => {
+  try {
+    // console.log('type:', profile.type);
+    const {data} = await axios.get(
+      `http://statsapi.mlb.com/api/v1/people/${profile.id}/stats?stats=${
+        profile.stats
+      }&season=${profile.season}&group=${profile.group}`
+    );
+    // console.log('player stats:', data);
+    dispatch(
+      getStats({
+        id: profile.id,
+        stats: data.stats[0].splits[0],
+        type: profile.group
+      })
+    );
   } catch (err) {
     console.error(err);
   }
@@ -108,6 +135,11 @@ export default function(state = initialState, action) {
   switch (action.type) {
     case GAMES:
       return {...state, games: action.games};
+    case GET_STATS:
+      return {
+        ...state,
+        stats: {...state.stats, [action.stats.id]: action.stats}
+      };
     default:
       return {...state};
   }

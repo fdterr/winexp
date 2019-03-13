@@ -1,8 +1,26 @@
 import React from 'react';
 import {Card} from 'semantic-ui-react';
 import PlayerCard from './playerCard';
+import BaseRunners from './baseRunners';
+import BallsStrikes from './ballsStrikes';
+import {connect} from 'react-redux';
+import {stats} from '../store';
 
 const LiveCard = props => {
+  props.getStats({
+    id: props.game.pitcher.id,
+    season: '2018',
+    stats: 'season',
+    group: 'pitching'
+  });
+
+  props.getStats({
+    id: props.game.batter.id,
+    season: '2018',
+    stats: 'season',
+    group: 'hitting'
+  });
+
   return (
     <Card.Content>
       <div className="situation">
@@ -15,7 +33,7 @@ const LiveCard = props => {
             }}
           />
         </div>
-        <table>
+        {/* <table className="ballsStrikes">
           <tbody>
             <tr>
               <td>
@@ -30,7 +48,17 @@ const LiveCard = props => {
             </tr>
             {makeBallsStrikes(props.game)}
           </tbody>
-        </table>
+        </table> */}
+        <div className="infoGraphic">
+          <BallsStrikes
+            bso={{
+              balls: props.game.balls,
+              strikes: props.game.strikes,
+              outs: props.game.outs
+            }}
+          />
+          <BaseRunners runners={props.game.runners} />
+        </div>
         <div className="situationPlayer">
           <strong>Batting</strong>
           <PlayerCard
@@ -45,7 +73,19 @@ const LiveCard = props => {
   );
 };
 
-export default LiveCard;
+// export default LiveCard;
+
+// const makeBallsStrikes2 = game => {
+//   const bS = []
+//   const max = 4
+//   for(let i = 0 ; i < max; i++) {
+//     bS.push(
+//       <tr>
+//         {if()}
+//       </tr>
+//     )
+//   }
+// }
 
 const makeBallsStrikes = game => {
   // if (game.status == 'Live') {
@@ -102,3 +142,22 @@ const makeBallsStrikes = game => {
 const maxBSO = game => {
   return Math.max(game.balls, game.strikes, game.outs);
 };
+
+/**
+ * Redux
+ */
+
+// const mapState = (state, ownprops) => {
+//   // console.log('LiveCard state', state);
+//   return {
+//    stats:state.games.stats[ownprops]
+//   };
+// };
+
+const mapDispatch = dispatch => {
+  return {
+    getStats: profile => dispatch(stats(profile))
+  };
+};
+
+export default connect(null, mapDispatch)(LiveCard);
