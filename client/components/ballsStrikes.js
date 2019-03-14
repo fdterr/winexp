@@ -5,7 +5,7 @@ const BallsStrikes = props => {
   const {balls, strikes, outs} = props.bso;
   return (
     <div className="ballsStrikesOuts">
-      {balls} - {strikes}, {outs} outs
+      {balls}-{strikes}, {outs} outs
     </div>
   );
 };

@@ -213,4 +213,6 @@ form div {
   margin-left: -10px;
   margin-right: -10px;
   width: 100px;
+  /* flex-shrink: 0; */
+  /* width: 75px; */
 }
