@@ -2,19 +2,14 @@ import React from 'react';
 import {connect} from 'react-redux';
 
 const PlayerCard = props => {
-  // console.log('rendering?', props.player.fullName, props.stats);
-  // props.stats &&
-  // props.stats.stats &&
-  // console.log('level2 rendering?', props.stats.stats.stat);
-  console.log('player', props.player);
+  // console.log('player', props.player.id);
   return (
     <div className="flexCenter">
-      <div className="playerName">{props.player.fullName}</div>
+      <div className="playerName">{props.player.fullName || 'n/a'}</div>
       <img
         className="mugshot"
-        src={`https://gd.mlb.com/images/gameday/mugshots/mlb/${
-          props.player.id
-        }.jpg`}
+        src={`https://gd.mlb.com/images/gameday/mugshots/mlb/${props.player
+          .id || 0}.jpg`}
         onError={e => {
           e.target.onerror = null;
           e.target.src =
@@ -38,8 +33,7 @@ const PlayerCard = props => {
 };
 
 const mapState = (state, ownProps) => {
-  // console.log('LiveCard state', state);
-  // console.log('ownprops', ownProps);
+  // console.log('ownprops', ownProps.player);
   return {
     stats: state.games.stats[ownProps.player.id]
   };

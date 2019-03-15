@@ -129,7 +129,7 @@ export const stats = profile => async dispatch => {
       })
     );
   } catch (err) {
-    console.error(err);
+    console.error(err, profile);
   }
 };
 

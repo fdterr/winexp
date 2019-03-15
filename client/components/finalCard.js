@@ -1,8 +1,9 @@
 import React from 'react';
+import {connect} from 'react-redux';
 import PlayerCard from './playerCard';
 
 const FinalCard = props => {
-  console.log('FC props', props);
+  // console.log('FC props', props);
   const {game} = props;
   return (
     <div className="finalCard">
@@ -20,4 +21,11 @@ const FinalCard = props => {
   );
 };
 
-export default FinalCard;
+const mapDispatch = dispatch => {
+  return {
+    getStats: profile => dispatch(stats(profile))
+  };
+};
+
+// export default FinalCard;
+export default connect(null, mapDispatch)(FinalCard);

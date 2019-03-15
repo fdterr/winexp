@@ -5,7 +5,28 @@ import {connect} from 'react-redux';
 import {stats} from '../store';
 
 const PreviewCard = props => {
-  console.log('previewProps', props);
+  // console.log('previewProps', props);
+
+  let {homeProbable, awayProbable} = props.preview || {};
+  if (!homeProbable) {
+    homeProbable = {fullName: 'n/a', id: '00001'};
+  } else if (!awayProbable) {
+    awayProbable = {fullName: 'n/a', id: '00001'};
+  }
+  props.getStats({
+    id: homeProbable.id,
+    season: '2018',
+    stats: 'season',
+    group: 'pitching'
+  });
+
+  props.getStats({
+    id: awayProbable.id,
+    season: '2018',
+    stats: 'season',
+    group: 'pitching'
+  });
+  // console.log('in preview', homeProbable, awayProbable);
   return (
     <Card.Content>
       <strong>
@@ -13,18 +34,8 @@ const PreviewCard = props => {
       </strong>
 
       <div className="situation">
-        <PlayerCard
-          player={{
-            fullName: props.preview.awayProbable.fullName,
-            id: props.preview.awayProbable.id
-          }}
-        />
-        <PlayerCard
-          player={{
-            fullName: props.preview.homeProbable.fullName,
-            id: props.preview.homeProbable.id
-          }}
-        />
+        <PlayerCard player={awayProbable} />
+        <PlayerCard player={homeProbable} />
         {/* </div> */}
       </div>
     </Card.Content>
