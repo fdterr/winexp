@@ -1,9 +1,11 @@
 import React from 'react';
 import {Card} from 'semantic-ui-react';
 import PlayerCard from './playerCard';
+import {connect} from 'react-redux';
+import {stats} from '../store';
 
 const PreviewCard = props => {
-  // console.log('previewProps', props);
+  console.log('previewProps', props);
   return (
     <Card.Content>
       <strong>
@@ -29,4 +31,16 @@ const PreviewCard = props => {
   );
 };
 
-export default PreviewCard;
+// export default PreviewCard;
+
+/**
+ * Redux
+ */
+
+const mapDispatch = dispatch => {
+  return {
+    getStats: profile => dispatch(stats(profile))
+  };
+};
+
+export default connect(null, mapDispatch)(PreviewCard);

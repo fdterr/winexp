@@ -2,6 +2,7 @@ import React from 'react';
 import {Card, Table} from 'semantic-ui-react';
 import PreviewCard from './previewCard';
 import LiveCard from './LiveCard';
+import FinalCard from './FinalCard';
 
 const nameAbbrevMatch = {
   'Boston Red Sox': 'BOS',
@@ -125,6 +126,8 @@ const GameCard = props => {
         />
       ) : props.game.status == 'Live' ? (
         <LiveCard game={props.game} />
+      ) : props.game.status == 'Final' ? (
+        <FinalCard game={props.game} />
       ) : (
         <div />
       )}

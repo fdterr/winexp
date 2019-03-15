@@ -33,22 +33,7 @@ const LiveCard = props => {
             }}
           />
         </div>
-        {/* <table className="ballsStrikes">
-          <tbody>
-            <tr>
-              <td>
-                <strong>B</strong>
-              </td>
-              <td>
-                <strong>S</strong>
-              </td>
-              <td>
-                <strong>O</strong>
-              </td>
-            </tr>
-            {makeBallsStrikes(props.game)}
-          </tbody>
-        </table> */}
+
         <div className="infoGraphic">
           <BallsStrikes
             bso={{

@@ -26,10 +26,7 @@ const getStats = stats => ({type: GET_STATS, stats});
 export const games = () => async dispatch => {
   try {
     let returnGames = [];
-    const {data} = await axios.get(
-      'http://statsapi.mlb.com/api/v1/schedule?sportId=1'
-    );
-    const games = data.dates[0].games;
+    const games = await todayGames();
 
     const linePromises = [];
     for (let i = 0; i < games.length; i++) {
@@ -43,8 +40,15 @@ export const games = () => async dispatch => {
       liveFeedPromises.push(livePromise);
     }
 
+    const boxScorePromises = [];
+    for (let i = 0; i < games.length; i++) {
+      const bsPromise = boxScore(games[i].gamePk);
+      boxScorePromises.push(bsPromise);
+    }
+
     await Promise.all(linePromises);
     await Promise.all(liveFeedPromises);
+    await Promise.all(boxScorePromises);
 
     const lineScores = [];
     const liveFeeds = [];
@@ -58,6 +62,7 @@ export const games = () => async dispatch => {
       let currentLiveFeed = liveFeeds[i];
 
       let game = newGame();
+      game.gamePk = games[i].gamePk;
       game.homeTeam = games[i].teams.home.team.name;
       game.awayTeam = games[i].teams.away.team.name;
       game.pitcher = pitcher(currentLineScore);
@@ -73,6 +78,7 @@ export const games = () => async dispatch => {
       game.status = games[i].status.abstractGameState;
       game.teamStats = teamStats(currentLineScore);
       game.preview = {};
+      game.decisions = decisions(currentLiveFeed);
 
       // console.log('preview?', game.status == 'Preview');
       if (game.status == 'Preview') {
@@ -172,10 +178,24 @@ const lineScore = async gamePk => {
 
 const liveFeed = async gamePk => {
   const {data} = await axios.get(
+    `http://statsapi.mlb.com/api/v1.1/game/${gamePk}/feed/live`
+  );
+  return data;
+};
+
+const boxScore = async gamePk => {
+  const {data} = await axios.get(
     `http://statsapi.mlb.com/api/v1/game/${gamePk}/feed/live`
   );
-  // console.log('live feed data is', data);
+  // console.log('boxScore data is', data);
   return data;
+};
+
+const todayGames = async () => {
+  const {data} = await axios.get(
+    'http://statsapi.mlb.com/api/v1/schedule?sportId=1'
+  );
+  return data.dates[0].games;
 };
 
 const topOfInning = lineScore => {
@@ -237,4 +257,13 @@ const probablePitchers = game => {
     homeProbable: game.gameData.probablePitchers.home,
     awayProbable: game.gameData.probablePitchers.away
   };
+};
+
+const decisions = liveFeed => {
+  try {
+    // console.log('decisions', liveFeed.liveData);
+    return liveFeed.liveData.decisions;
+  } catch (err) {
+    console.error(err);
+  }
 };

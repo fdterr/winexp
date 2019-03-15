@@ -2,11 +2,11 @@ import React from 'react';
 import {connect} from 'react-redux';
 
 const PlayerCard = props => {
-  console.log('rendering?', props.player.fullName, props.stats);
-  props.stats &&
-    props.stats.stats &&
-    console.log('level2 rendering?', props.stats.stats.stat);
-  // console.log('player', props.player.fullName);
+  // console.log('rendering?', props.player.fullName, props.stats);
+  // props.stats &&
+  // props.stats.stats &&
+  // console.log('level2 rendering?', props.stats.stats.stat);
+  console.log('player', props.player);
   return (
     <div className="flexCenter">
       <div className="playerName">{props.player.fullName}</div>

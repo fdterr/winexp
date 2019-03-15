@@ -216,3 +216,8 @@ form div {
   /* flex-shrink: 0; */
   /* width: 75px; */
 }
+
+.finalCard {
+  display: flex;
+  /* justify-content: space-evenly; */
+}
