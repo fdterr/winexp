@@ -191,6 +191,13 @@ const boxScore = async gamePk => {
   return data;
 };
 
+const winProbability = async gamePk => {
+  const {data} = await axios.get(
+    `http://statsapi.mlb.com/api/v1/game/${gamePk}/feed/live`
+  );
+  return data;
+};
+
 const todayGames = async () => {
   const {data} = await axios.get(
     'http://statsapi.mlb.com/api/v1/schedule?sportId=1'
