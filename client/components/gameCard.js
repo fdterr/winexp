@@ -38,12 +38,25 @@ const nameAbbrevMatch = {
 };
 
 const GameCard = props => {
-  const homeTeam = `bbclub-${nameAbbrevMatch[
-    props.game.homeTeam
-  ].toLowerCase()}`;
-  const awayTeam = `bbclub-${nameAbbrevMatch[
-    props.game.awayTeam
-  ].toLowerCase()}`;
+  console.log('gameCard props', props);
+  let homeTeam;
+  let awayTeam;
+
+  try {
+    homeTeam = `bbclub-${nameAbbrevMatch[props.game.homeTeam].toLowerCase()}`;
+  } catch (err) {
+    homeTeam = '';
+    console.error(err);
+  }
+  try {
+    awayTeam = `bbclub-${nameAbbrevMatch[props.game.awayTeam].toLowerCase()}`;
+  } catch (err) {
+    awayTeam = '';
+    console.error(err);
+  }
+
+  // const homeTeam = ""
+  // const awayTeam = ""
 
   return (
     <Card className="gameCard">
