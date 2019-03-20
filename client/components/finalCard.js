@@ -3,7 +3,7 @@ import {connect} from 'react-redux';
 import PlayerCard from './playerCard';
 
 const FinalCard = props => {
-  // console.log('FC props', props);
+  console.log('FC props', props);
   const {game} = props;
   return (
     <div className="finalCard">

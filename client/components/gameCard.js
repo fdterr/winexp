@@ -38,7 +38,7 @@ const nameAbbrevMatch = {
 };
 
 const GameCard = props => {
-  console.log('gameCard props', props);
+  // console.log('gameCard props', props);
   let homeTeam;
   let awayTeam;
 
@@ -137,7 +137,7 @@ const GameCard = props => {
             awayProbable: props.game.awayProbable
           }}
         />
-      ) : props.game.status == 'Live' ? (
+      ) : props.game.status == 'Live' || props.game.status == 'In Progress' ? (
         <LiveCard game={props.game} />
       ) : props.game.status == 'Final' ? (
         <FinalCard game={props.game} />

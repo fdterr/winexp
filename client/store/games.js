@@ -75,7 +75,7 @@ export const games = () => async dispatch => {
       game.outs = situation(currentLineScore).outs;
       game.balls = situation(currentLineScore).balls;
       game.strikes = situation(currentLineScore).strikes;
-      game.status = games[i].status.abstractGameState;
+      game.status = games[i].status.detailedState;
       game.teamStats = teamStats(currentLineScore);
       game.preview = {};
       game.decisions = decisions(currentLiveFeed);
@@ -99,7 +99,7 @@ export const games = () => async dispatch => {
         return -1;
       } else if (a.status == 'Final') {
         return 1;
-      } else if (b.status == 'Preview') {
+      } else if (b.status == 'Preview' || b.status == 'Pre-Game') {
         return -1;
       } else {
         return 1;
