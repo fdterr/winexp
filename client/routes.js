@@ -12,6 +12,10 @@ class Routes extends Component {
   componentDidMount() {
     // this.props.loadInitialData()
     this.props.getGames();
+    setInterval(() => {
+      console.log('inside interval');
+      this.props.getGames();
+    }, 30000);
   }
 
   render() {
