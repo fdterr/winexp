@@ -3,6 +3,9 @@ import {Card, Table} from 'semantic-ui-react';
 import PreviewCard from './previewCard';
 import LiveCard from './LiveCard';
 import FinalCard from './FinalCard';
+import WinProbability from './winProbability';
+import {connect} from 'react-redux';
+import {winProbability} from '../store';
 
 const nameAbbrevMatch = {
   'Boston Red Sox': 'BOS',
@@ -54,9 +57,6 @@ const GameCard = props => {
     awayTeam = '';
     console.error(err);
   }
-
-  // const homeTeam = ""
-  // const awayTeam = ""
 
   return (
     <Card className="gameCard">
@@ -145,7 +145,12 @@ const GameCard = props => {
           }}
         />
       ) : props.game.status == 'Live' || props.game.status == 'In Progress' ? (
-        <LiveCard game={props.game} />
+        <div>
+          <LiveCard game={props.game} />
+          <Card.Content>
+            <WinProbability />
+          </Card.Content>
+        </div>
       ) : props.game.status == 'Final' ? (
         <FinalCard game={props.game} />
       ) : (
@@ -155,4 +160,18 @@ const GameCard = props => {
   );
 };
 
-export default GameCard;
+const mapState = state => {
+  console.log('gC state is', state);
+  return {
+    //something
+  };
+};
+
+const mapDispatch = dispatch => {
+  return {
+    getWP: id => dispatch(winProbability(id))
+  };
+};
+
+// export default GameCard;
+export default connect(mapState, mapDispatch)(GameCard);

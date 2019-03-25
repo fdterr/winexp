@@ -12,12 +12,14 @@ const initialState = {
  */
 const GAMES = 'GAMES';
 const GET_STATS = 'GET_STATS';
+const WIN_PROBABILITY = 'WIN_PROBABILITY';
 
 /**
  * Action Creators
  */
 const getGames = games => ({type: GAMES, games});
 const getStats = stats => ({type: GET_STATS, stats});
+const getWP = game => ({type: WIN_PROBABILITY, game});
 
 /**
  * Thunk Creators
@@ -133,6 +135,17 @@ export const stats = profile => async dispatch => {
   }
 };
 
+export const winProbability = game => async dispatch => {
+  try {
+    const {data} = await axios.get(
+      `http://statsapi.mlb.com/api/v1/game/${game}/winProbability`
+    );
+    dispatch(getWP({id: game, wp: data}));
+  } catch (err) {
+    console.error(err);
+  }
+};
+
 /**
  * Reducer
  */
@@ -191,12 +204,12 @@ const boxScore = async gamePk => {
   return data;
 };
 
-const winProbability = async gamePk => {
-  const {data} = await axios.get(
-    `http://statsapi.mlb.com/api/v1/game/${gamePk}/feed/live`
-  );
-  return data;
-};
+// const winProbability = async gamePk => {
+//   const {data} = await axios.get(
+//     `http://statsapi.mlb.com/api/v1/game/${gamePk}/feed/live`
+//   );
+//   return data;
+// };
 
 const todayGames = async () => {
   const {data} = await axios.get(
