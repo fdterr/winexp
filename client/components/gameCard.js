@@ -68,7 +68,14 @@ const GameCard = props => {
             : props.game.inningTop ? 'Top ' : 'Bot. '}
           {props.game.inning}
         </Card.Header>
-        <Table className="lineScore" basic="very" celled collapsing unstackable>
+        <Table
+          className="lineScore"
+          basic="very"
+          celled
+          collapsing
+          unstackable
+          compact
+        >
           {/* <div id="one"> */}
           {/* <div id="two"> */}
           <Table.Body className="gameTable">

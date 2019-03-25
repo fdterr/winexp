@@ -1,6 +1,7 @@
 import React from 'react';
 import {Card} from 'semantic-ui-react';
-import PlayerCard from './playerCard';
+// import PlayerCard from './playerCard';
+import Player from './player';
 import BaseRunners from './baseRunners';
 import BallsStrikes from './ballsStrikes';
 import {connect} from 'react-redux';
@@ -26,14 +27,25 @@ const LiveCard = props => {
       <div className="situation">
         <div className="situationPlayer">
           <strong>Pitching</strong>
-          <PlayerCard
+          {/* {props.game.pitcher.fullName} */}
+          <Player
             player={{
               fullName: props.game.pitcher.fullName,
               id: props.game.pitcher.id
             }}
+            live={true}
           />
         </div>
-
+        <div className="situationPlayer">
+          <strong>Batting</strong>
+          <Player
+            player={{
+              fullName: props.game.batter.fullName,
+              id: props.game.batter.id
+            }}
+            live={true}
+          />
+        </div>
         <div className="infoGraphic">
           <BallsStrikes
             bso={{
@@ -43,15 +55,6 @@ const LiveCard = props => {
             }}
           />
           <BaseRunners runners={props.game.runners} />
-        </div>
-        <div className="situationPlayer">
-          <strong>Batting</strong>
-          <PlayerCard
-            player={{
-              fullName: props.game.batter.fullName,
-              id: props.game.batter.id
-            }}
-          />
         </div>
       </div>
     </Card.Content>

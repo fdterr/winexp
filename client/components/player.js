@@ -1,42 +1,21 @@
 import React from 'react';
 import {connect} from 'react-redux';
 
-const PlayerCard = props => {
+const Player = props => {
   // console.log('player', props.player.id);
   return (
     <div className="flexCenter">
-      {!props.live && (
-        <div className="playerName">{props.player.fullName || 'n/a'}</div>
-      )}
-      <div className="imageStats">
-        <div>
-          <img
-            className="mugshot"
-            src={`https://gd.mlb.com/images/gameday/mugshots/mlb/${props.player
-              .id || 0}.jpg`}
-            onError={e => {
-              e.target.onerror = null;
-              e.target.src =
-                'https://prod-gameday.mlbstatic.com/responsive-gameday-assets/1.2.0/images/players/player-default@2x.png';
-            }}
-          />
-        </div>
-        <div className="playerStats">
-          <div>
-            <strong>Season:</strong>
-            {props.stats &&
-              props.stats.stats &&
-              // props.stats.stats.stat &&
-              makeStats(props.stats.type, props.stats.stats.stat)}
-            {!props.stats && (
-              <div>
-                n/a <br />
-              </div>
-            )}
-          </div>
-          {props.live && <div>{currentStats()}</div>}
-        </div>
-      </div>
+      <img
+        className="mugshot"
+        src={`https://gd.mlb.com/images/gameday/mugshots/mlb/${props.player
+          .id || 0}.jpg`}
+        onError={e => {
+          e.target.onerror = null;
+          e.target.src =
+            'https://prod-gameday.mlbstatic.com/responsive-gameday-assets/1.2.0/images/players/player-default@2x.png';
+        }}
+      />
+      <div className="playerName">{props.player.fullName || 'n/a'}</div>
     </div>
   );
 };
@@ -54,7 +33,7 @@ const mapState = (state, ownProps) => {
 //   };
 // };
 
-export default connect(mapState, null)(PlayerCard);
+export default connect(mapState, null)(Player);
 
 /**
  * Helper Methods

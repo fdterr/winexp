@@ -47,8 +47,8 @@ form div {
   width: 95% !important;
   margin-left: auto !important;
   margin-right: auto !important;
-  /* margin-top: auto !important; */
-  margin-bottom: 2px !important;
+  margin-top: -10px !important;
+  margin-bottom: 0px !important;
   /* display: flex; */
   /* flex-direction: row; */
   /* justify-content: center !important; */
@@ -56,10 +56,6 @@ form div {
 
 .teamStats {
   text-align: center !important;
-}
-
-.content {
-  padding-bottom: 5px !important;
 }
 
 .icon {
@@ -78,7 +74,7 @@ form div {
 .situation {
   display: flex;
   justify-content: space-evenly;
-  align-items: flex-start;
+  align-items: center;
 }
 
 .mugshot {
@@ -94,8 +90,7 @@ form div {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: flex-start;
-  width: 170px;
+  /* width: 170px; */
 }
 
 .pitch {
@@ -153,7 +148,7 @@ form div {
   height: 40px;
   width: 40px;
   background-color: white;
-  margin-top: 10px;
+  margin-top: 3px;
 }
 
 .base {
@@ -177,11 +172,11 @@ form div {
 
 .playerStats {
   display: flex;
-  flex-direction: row;
-  align-items: center;
+  flex-direction: column;
+  align-items: flex-start;
   justify-content: flex-start;
   line-height: 0.9em;
-  margin-top: 5px;
+  margin-left: 5px;
 }
 
 .playerLine {
@@ -189,7 +184,7 @@ form div {
   /* margin-left: 5px; */
   text-align: left;
   font-size: 0.9em;
-  margin-left: 5px;
+  /* margin-left: 5px; */
 }
 
 .ballsStrikes {
@@ -197,17 +192,16 @@ form div {
   margin-right: 2px;
 }
 
-.playerName {
-  text-align: center;
-}
-
 .content {
   padding: 0.5em !important;
+  padding-right: 0.2em !important;
+  /* padding-bottom: 1px !important; */
 }
 
 .ballsStrikesOuts {
   /* display:flex; */
   text-align: center !important;
+  font-size: 0.9em;
 }
 
 .infoGraphic {
@@ -215,9 +209,9 @@ form div {
   flex-direction: column;
   align-items: center;
   justify-content: space-between;
-  margin-top: 2.75em;
+  margin-top: -12px;
   margin-left: -12px;
-  margin-right: -12px;
+  margin-right: 0px;
   width: 100px;
   /* flex-shrink: 0; */
   /* width: 75px; */
@@ -226,4 +220,28 @@ form div {
 .finalCard {
   display: flex;
   /* justify-content: space-evenly; */
+}
+
+.imageStats {
+  display: flex;
+  flex-direction: row;
+}
+
+.textCenter {
+  text-align: center;
+}
+
+.playerName {
+  /* width: 100%; */
+  /* text-align: left; */
+  font-size: 0.9em;
+}
+
+.card {
+  font-size: 0.9em !important;
+}
+
+.ui.compact.table td {
+  padding-top: 0.25em !important;
+  padding-bottom: 0.25em !important;
 }
