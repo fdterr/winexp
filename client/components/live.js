@@ -10,7 +10,7 @@ const Live = props => {
     <div className="cardTable">
       {props.games.length ? (
         props.games.map(game => {
-          return <GameCard game={game} />;
+          return <GameCard game={game} key={game.gamePk} />;
         })
       ) : (
         <div>Something</div>

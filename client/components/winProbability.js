@@ -157,39 +157,66 @@ class CustomizedAxisTick extends PureComponent {
 export default class WinProbability extends PureComponent {
   static jsfiddleUrl = 'https://jsfiddle.net/alidingling/5br7g9d6/';
 
+  componentDidMount() {
+    console.log('wP mounted', this.props);
+  }
   render() {
+    console.log('wP rendered', this.props);
+
     return (
-      <LineChart
-        width={350}
-        height={150}
-        data={data}
-        margin={{
-          top: 20,
-          right: 30,
-          left: 20,
-          bottom: 10
-        }}
-      >
-        <CartesianGrid strokeDasharray="3 3" />
-        <XAxis
-          hide={true}
-          dataKey="name"
-          // interval={9}
-          tickCount={9}
-          height={60}
-          tick={<CustomizedAxisTick />}
-        />
-        <YAxis hide={true} />
-        <Tooltip />
-        <Legend />
-        <Line
-          type="monotone"
-          dataKey="pv"
-          stroke="#8884d8"
-          // label={<CustomizedLabel />}
-        />
-        <Line type="monotone" dataKey="uv" stroke="#82ca9d" />
-      </LineChart>
+      <div>
+        {this.props.wP && (
+          <LineChart
+            width={350}
+            height={150}
+            data={this.props.wP}
+            margin={{
+              top: 20,
+              right: 30,
+              left: 20,
+              bottom: 10
+            }}
+          >
+            <CartesianGrid strokeDasharray="3 3" />
+            <XAxis
+              hide={true}
+              dataKey="name"
+              // interval={9}
+              tickCount={9}
+              height={60}
+              tick={<CustomizedAxisTick />}
+            />
+            <YAxis hide={true} />
+            <Tooltip />
+            <Legend />
+            <Line
+              type="monotone"
+              dataKey="pv"
+              stroke="#8884d8"
+              // label={<CustomizedLabel />}
+            />
+            <Line type="monotone" dataKey="uv" stroke="#82ca9d" />
+          </LineChart>
+        )}
+      </div>
     );
   }
 }
+
+/**
+ * Helper Methods
+ */
+
+const makeData = data => {
+  const graphData = [];
+  for (let i = 0; i < data.length; i++) {
+    let point = {
+      inning: data[i].about.inning,
+      play: data[i].playEvents.description,
+      uv: data[i].homeTeamWinProbability,
+      pv: data[i].awayTeamWinProbability
+    };
+    graphData.push(point);
+  }
+  return graphData;
+};

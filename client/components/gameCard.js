@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {Component} from 'react';
 import {Card, Table} from 'semantic-ui-react';
 import PreviewCard from './previewCard';
 import LiveCard from './LiveCard';
@@ -40,130 +40,139 @@ const nameAbbrevMatch = {
   'San Diego Padres': 'SDN'
 };
 
-const GameCard = props => {
-  // console.log('gameCard props', props);
-  let homeTeam;
-  let awayTeam;
+class GameCard extends Component {
+  // console.log('gameCard this.props', this.props);
 
-  try {
-    homeTeam = `bbclub-${nameAbbrevMatch[props.game.homeTeam].toLowerCase()}`;
-  } catch (err) {
-    homeTeam = '';
-    console.error(err);
+  componentDidMount() {
+    // console.log('GC mounted', this.props);
+    this.props.getWP(this.props.game.gamePk);
   }
-  try {
-    awayTeam = `bbclub-${nameAbbrevMatch[props.game.awayTeam].toLowerCase()}`;
-  } catch (err) {
-    awayTeam = '';
-    console.error(err);
+  render() {
+    let homeTeam;
+    let awayTeam;
+
+    try {
+      homeTeam = `bbclub-${nameAbbrevMatch[
+        this.props.game.homeTeam
+      ].toLowerCase()}`;
+    } catch (err) {
+      homeTeam = '';
+    }
+    try {
+      awayTeam = `bbclub-${nameAbbrevMatch[
+        this.props.game.awayTeam
+      ].toLowerCase()}`;
+    } catch (err) {
+      awayTeam = '';
+    }
+
+    return (
+      <Card className="gameCard">
+        <Card.Content>
+          <Card.Header>
+            {this.props.game.status} -{' '}
+            {this.props.game.status == 'Final'
+              ? ''
+              : this.props.game.inningTop ? 'Top ' : 'Bot. '}
+            {this.props.game.inning}
+          </Card.Header>
+          <Table
+            className="lineScore"
+            basic="very"
+            celled
+            collapsing
+            unstackable
+            compact
+          >
+            {/* <div id="one"> */}
+            {/* <div id="two"> */}
+            <Table.Body className="gameTable">
+              {/* Runs, Hits Errors (Top Row) */}
+              <Table.Row>
+                <Table.Cell />
+                <Table.Cell className="teamStats">
+                  <strong>R</strong>
+                </Table.Cell>
+                <Table.Cell className="teamStats">
+                  <strong>H</strong>
+                </Table.Cell>
+                <Table.Cell className="teamStats">
+                  <strong>E</strong>
+                </Table.Cell>
+              </Table.Row>
+              {/* Away Team */}
+              <Table.Row>
+                <Table.Cell>
+                  <div className="teamName">
+                    <div className="icon">
+                      <i className={awayTeam} />
+                    </div>
+                    {this.props.game.awayTeam}
+                  </div>
+                </Table.Cell>
+                <Table.Cell className="teamStats">
+                  {this.props.game.teamStats.away.runs}
+                </Table.Cell>
+                <Table.Cell className="teamStats">
+                  {this.props.game.teamStats.away.hits}
+                </Table.Cell>
+                <Table.Cell className="teamStats">
+                  {this.props.game.teamStats.away.errors}
+                </Table.Cell>
+              </Table.Row>
+              {/* Home Team */}
+              <Table.Row>
+                <Table.Cell>
+                  <div className="teamName">
+                    <div className="icon">
+                      <i className={homeTeam} />
+                    </div>
+                    {this.props.game.homeTeam}
+                  </div>
+                </Table.Cell>
+                <Table.Cell className="teamStats">
+                  {this.props.game.teamStats.home.runs}
+                </Table.Cell>
+                <Table.Cell className="teamStats">
+                  {this.props.game.teamStats.home.hits}
+                </Table.Cell>
+                <Table.Cell className="teamStats">
+                  {this.props.game.teamStats.home.errors}
+                </Table.Cell>
+              </Table.Row>
+            </Table.Body>
+            {/* </div> */}
+            {/* </div> */}
+          </Table>
+        </Card.Content>
+        {this.props.game.status == 'Preview' ? (
+          <PreviewCard
+            preview={{
+              homeProbable: this.props.game.homeProbable,
+              awayProbable: this.props.game.awayProbable
+            }}
+          />
+        ) : this.props.game.status == 'Live' ||
+        this.props.game.status == 'In Progress' ? (
+          <div>
+            <LiveCard game={this.props.game} />
+            <Card.Content>
+              <WinProbability wP={makeData(this.props.winProbability)} />
+            </Card.Content>
+          </div>
+        ) : this.props.game.status == 'Final' ? (
+          <FinalCard game={this.props.game} />
+        ) : (
+          <div />
+        )}
+      </Card>
+    );
   }
+}
 
-  return (
-    <Card className="gameCard">
-      <Card.Content>
-        <Card.Header>
-          {props.game.status} -{' '}
-          {props.game.status == 'Final'
-            ? ''
-            : props.game.inningTop ? 'Top ' : 'Bot. '}
-          {props.game.inning}
-        </Card.Header>
-        <Table
-          className="lineScore"
-          basic="very"
-          celled
-          collapsing
-          unstackable
-          compact
-        >
-          {/* <div id="one"> */}
-          {/* <div id="two"> */}
-          <Table.Body className="gameTable">
-            {/* Runs, Hits Errors (Top Row) */}
-            <Table.Row>
-              <Table.Cell />
-              <Table.Cell className="teamStats">
-                <strong>R</strong>
-              </Table.Cell>
-              <Table.Cell className="teamStats">
-                <strong>H</strong>
-              </Table.Cell>
-              <Table.Cell className="teamStats">
-                <strong>E</strong>
-              </Table.Cell>
-            </Table.Row>
-            {/* Away Team */}
-            <Table.Row>
-              <Table.Cell>
-                <div className="teamName">
-                  <div className="icon">
-                    <i className={awayTeam} />
-                  </div>
-                  {props.game.awayTeam}
-                </div>
-              </Table.Cell>
-              <Table.Cell className="teamStats">
-                {props.game.teamStats.away.runs}
-              </Table.Cell>
-              <Table.Cell className="teamStats">
-                {props.game.teamStats.away.hits}
-              </Table.Cell>
-              <Table.Cell className="teamStats">
-                {props.game.teamStats.away.errors}
-              </Table.Cell>
-            </Table.Row>
-            {/* Home Team */}
-            <Table.Row>
-              <Table.Cell>
-                <div className="teamName">
-                  <div className="icon">
-                    <i className={homeTeam} />
-                  </div>
-                  {props.game.homeTeam}
-                </div>
-              </Table.Cell>
-              <Table.Cell className="teamStats">
-                {props.game.teamStats.home.runs}
-              </Table.Cell>
-              <Table.Cell className="teamStats">
-                {props.game.teamStats.home.hits}
-              </Table.Cell>
-              <Table.Cell className="teamStats">
-                {props.game.teamStats.home.errors}
-              </Table.Cell>
-            </Table.Row>
-          </Table.Body>
-          {/* </div> */}
-          {/* </div> */}
-        </Table>
-      </Card.Content>
-      {props.game.status == 'Preview' ? (
-        <PreviewCard
-          preview={{
-            homeProbable: props.game.homeProbable,
-            awayProbable: props.game.awayProbable
-          }}
-        />
-      ) : props.game.status == 'Live' || props.game.status == 'In Progress' ? (
-        <div>
-          <LiveCard game={props.game} />
-          <Card.Content>
-            <WinProbability />
-          </Card.Content>
-        </div>
-      ) : props.game.status == 'Final' ? (
-        <FinalCard game={props.game} />
-      ) : (
-        <div />
-      )}
-    </Card>
-  );
-};
-
-const mapState = state => {
-  console.log('gC state is', state);
+const mapState = (state, ownprops) => {
   return {
-    //something
+    winProbability: state.games.winProbability[ownprops.game.gamePk]
   };
 };
 
@@ -175,3 +184,23 @@ const mapDispatch = dispatch => {
 
 // export default GameCard;
 export default connect(mapState, mapDispatch)(GameCard);
+
+/**
+ * Helper Methods
+ */
+
+const makeData = data => {
+  const graphData = [];
+  if (data) {
+    for (let i = 0; i < data.length; i++) {
+      let point = {
+        inning: data[i].about.inning,
+        play: data[i].playEvents.description,
+        uv: data[i].homeTeamWinProbability,
+        pv: data[i].awayTeamWinProbability
+      };
+      graphData.push(point);
+    }
+  }
+  return graphData;
+};

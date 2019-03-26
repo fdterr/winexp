@@ -5,7 +5,8 @@ const initialState = {
   stats: {
     pitchers: {},
     hitters: {}
-  }
+  },
+  winProbability: {}
 };
 /**
  * Action Types
@@ -19,7 +20,10 @@ const WIN_PROBABILITY = 'WIN_PROBABILITY';
  */
 const getGames = games => ({type: GAMES, games});
 const getStats = stats => ({type: GET_STATS, stats});
-const getWP = game => ({type: WIN_PROBABILITY, game});
+const getWP = game => {
+  // console.log('inside WP', game);
+  return {type: WIN_PROBABILITY, game};
+};
 
 /**
  * Thunk Creators
@@ -159,6 +163,14 @@ export default function(state = initialState, action) {
         ...state,
         stats: {...state.stats, [action.stats.id]: action.stats}
       };
+    case WIN_PROBABILITY:
+      return {
+        ...state,
+        winProbability: {
+          ...state.winProbability,
+          [action.game.id]: action.game.wp
+        }
+      };
     default:
       return {...state};
   }
@@ -200,7 +212,6 @@ const boxScore = async gamePk => {
   const {data} = await axios.get(
     `http://statsapi.mlb.com/api/v1/game/${gamePk}/feed/live`
   );
-  // console.log('boxScore data is', data);
   return data;
 };
 
@@ -281,7 +292,6 @@ const probablePitchers = game => {
 
 const decisions = liveFeed => {
   try {
-    // console.log('decisions', liveFeed.liveData);
     return liveFeed.liveData.decisions;
   } catch (err) {
     console.error(err);

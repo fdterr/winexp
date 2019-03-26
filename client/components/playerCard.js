@@ -42,7 +42,6 @@ const PlayerCard = props => {
 };
 
 const mapState = (state, ownProps) => {
-  // console.log('ownprops', ownProps.player);
   return {
     stats: state.games.stats[ownProps.player.id]
   };

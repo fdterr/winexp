@@ -8,19 +8,19 @@ import {connect} from 'react-redux';
 import {stats} from '../store';
 
 const LiveCard = props => {
-  props.getStats({
-    id: props.game.pitcher.id,
-    season: '2018',
-    stats: 'season',
-    group: 'pitching'
-  });
+  // props.getStats({
+  //   id: props.game.pitcher.id,
+  //   season: '2018',
+  //   stats: 'season',
+  //   group: 'pitching'
+  // });
 
-  props.getStats({
-    id: props.game.batter.id,
-    season: '2018',
-    stats: 'season',
-    group: 'hitting'
-  });
+  // props.getStats({
+  //   id: props.game.batter.id,
+  //   season: '2018',
+  //   stats: 'season',
+  //   group: 'hitting'
+  // });
 
   return (
     <Card.Content>
