@@ -34,11 +34,11 @@ export const games = () => async dispatch => {
     let returnGames = [];
     const games = await todayGames();
 
-    const linePromises = [];
-    for (let i = 0; i < games.length; i++) {
-      const linePromise = lineScore(games[i].gamePk);
-      linePromises.push(linePromise);
-    }
+    // const linePromises = [];
+    // for (let i = 0; i < games.length; i++) {
+    //   const linePromise = lineScore(games[i].gamePk);
+    //   linePromises.push(linePromise);
+    // }
 
     const liveFeedPromises = [];
     for (let i = 0; i < games.length; i++) {
@@ -46,26 +46,27 @@ export const games = () => async dispatch => {
       liveFeedPromises.push(livePromise);
     }
 
-    const boxScorePromises = [];
-    for (let i = 0; i < games.length; i++) {
-      const bsPromise = boxScore(games[i].gamePk);
-      boxScorePromises.push(bsPromise);
-    }
+    // const boxScorePromises = [];
+    // for (let i = 0; i < games.length; i++) {
+    //   const bsPromise = boxScore(games[i].gamePk);
+    //   boxScorePromises.push(bsPromise);
+    // }
 
-    await Promise.all(linePromises);
+    // await Promise.all(linePromises);
     await Promise.all(liveFeedPromises);
-    await Promise.all(boxScorePromises);
+    // await Promise.all(boxScorePromises);
 
-    const lineScores = [];
+    // const lineScores = [];
     const liveFeeds = [];
-    for (let i = 0; i < linePromises.length; i++) {
-      lineScores.push(await linePromises[i]);
+    for (let i = 0; i < liveFeedPromises.length; i++) {
+      // lineScores.push(await linePromises[i]);
       liveFeeds.push(await liveFeedPromises[i]);
     }
 
-    for (let i = 0; i < lineScores.length; i++) {
-      let currentLineScore = lineScores[i];
+    for (let i = 0; i < liveFeedPromises.length; i++) {
       let currentLiveFeed = liveFeeds[i];
+      // let currentLineScore = lineScores[i];
+      let currentLineScore = currentLiveFeed.liveData.linescore;
 
       let game = newGame();
       game.gamePk = games[i].gamePk;
@@ -85,6 +86,8 @@ export const games = () => async dispatch => {
       game.teamStats = teamStats(currentLineScore);
       game.preview = {};
       game.decisions = decisions(currentLiveFeed);
+      // game.allPlays = currentLiveFeed.liveData.plays.allPlays;
+      game.descriptions = descriptions(currentLiveFeed.liveData.plays.allPlays);
 
       // console.log('preview?', game.status == 'Preview');
       if (game.status == 'Preview') {
@@ -95,6 +98,7 @@ export const games = () => async dispatch => {
       }
 
       returnGames.push(game);
+      // console.log('game is', game);
     }
     // console.log('new game is', returnGames[0]);
 
@@ -296,4 +300,12 @@ const decisions = liveFeed => {
   } catch (err) {
     console.error(err);
   }
+};
+
+const descriptions = allPlays => {
+  const plays = [];
+  for (let i = 0; i < allPlays.length; i++) {
+    plays.push(allPlays[i].result.description);
+  }
+  return plays;
 };

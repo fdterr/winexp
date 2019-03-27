@@ -1,5 +1,4 @@
-/* eslint-disable react/no-multi-comp */
-import React, {PureComponent} from 'react';
+import React, {PureComponent, Component} from 'react';
 import {
   LineChart,
   Line,
@@ -10,190 +9,45 @@ import {
   Legend
 } from 'recharts';
 
-const data = [
-  {
-    name: '1st',
-    uv: 4000,
-    pv: 2400,
-    amt: 2400
-  },
-  {
-    name: '2nd',
-    uv: 3000,
-    pv: 1398,
-    amt: 2210
-  },
-  {
-    name: '3rd',
-    uv: 2000,
-    pv: 9800,
-    amt: 2290
-  },
-  {
-    name: '4th',
-    uv: 2780,
-    pv: 3908,
-    amt: 2000
-  },
-  {
-    name: '5th',
-    uv: 1890,
-    pv: 4800,
-    amt: 2181
-  },
-  {
-    name: '5th',
-    uv: 2390,
-    pv: 3800,
-    amt: 2500
-  },
-  {
-    name: '6th',
-    uv: 3490,
-    pv: 4300,
-    amt: 2100
-  },
-  {
-    name: '1st',
-    uv: 4000,
-    pv: 2400,
-    amt: 2400
-  },
-  {
-    name: '2nd',
-    uv: 3000,
-    pv: 1398,
-    amt: 2210
-  },
-  {
-    name: '3rd',
-    uv: 2000,
-    pv: 9800,
-    amt: 2290
-  },
-  {
-    name: '4th',
-    uv: 2780,
-    pv: 3908,
-    amt: 2000
-  },
-  {
-    name: '5th',
-    uv: 1890,
-    pv: 4800,
-    amt: 2181
-  },
-  {
-    name: '5th',
-    uv: 2390,
-    pv: 3800,
-    amt: 2500
-  },
-  {
-    name: '6th',
-    uv: 3490,
-    pv: 4300,
-    amt: 2100
-  },
-  {
-    name: '4th',
-    uv: 2780,
-    pv: 3908,
-    amt: 2000
-  },
-  {
-    name: '5th',
-    uv: 1890,
-    pv: 4800,
-    amt: 2181
-  },
-  {
-    name: '5th',
-    uv: 2390,
-    pv: 3800,
-    amt: 2500
-  },
-  {
-    name: '6th',
-    uv: 3490,
-    pv: 4300,
-    amt: 2100
-  }
-];
+export default class Example extends PureComponent {
+  // static jsfiddleUrl = 'https://jsfiddle.net/alidingling/xqjtetw0/';
 
-class CustomizedLabel extends PureComponent {
   render() {
-    const {x, y, stroke, value} = this.props;
-
+    // console.log('wP rendered', this.props.wP);
     return (
-      <text x={x} y={y} dy={-4} fill={stroke} fontSize={10} textAnchor="middle">
-        {value}
-      </text>
-    );
-  }
-}
-
-class CustomizedAxisTick extends PureComponent {
-  render() {
-    const {x, y, stroke, payload} = this.props;
-
-    return (
-      <g transform={`translate(${x},${y})`}>
-        <text
-          x={0}
-          y={0}
-          dy={16}
-          textAnchor="end"
-          fill="#666"
-          transform="rotate(-35)"
-        >
-          {payload.value}
-        </text>
-      </g>
-    );
-  }
-}
-
-export default class WinProbability extends PureComponent {
-  static jsfiddleUrl = 'https://jsfiddle.net/alidingling/5br7g9d6/';
-
-  componentDidMount() {
-    console.log('wP mounted', this.props);
-  }
-  render() {
-    console.log('wP rendered', this.props);
-
-    return (
-      <div>
+      <div className="graph">
         {this.props.wP && (
           <LineChart
-            width={350}
-            height={150}
+            width={400}
+            height={300}
             data={this.props.wP}
             margin={{
-              top: 20,
+              top: 5,
               right: 30,
               left: 20,
-              bottom: 10
+              bottom: 5
             }}
           >
             <CartesianGrid strokeDasharray="3 3" />
             <XAxis
-              hide={true}
-              dataKey="name"
-              // interval={9}
-              tickCount={9}
-              height={60}
-              tick={<CustomizedAxisTick />}
+              dataKey="inning"
+              type="category"
+              // allowDuplicatedCategory={true}
+              // interval="preserveStartEnd"
+              // tickCount={9}
+              // interval={0}
+              domain={[1, this.props.inning]}
+              ticks={[1, 2, 3, 4, 5, 6, 7, 8, 9]}
+              margin={{left: -175}}
             />
-            <YAxis hide={true} />
-            <Tooltip />
+            <YAxis domain={[0, 100]} />
+            <Tooltip payload={this.props.wP} content={<CustomTooltip />} />
             <Legend />
             <Line
               type="monotone"
               dataKey="pv"
               stroke="#8884d8"
-              // label={<CustomizedLabel />}
+              activeDot={{r: 8}}
             />
             <Line type="monotone" dataKey="uv" stroke="#82ca9d" />
           </LineChart>
@@ -203,20 +57,24 @@ export default class WinProbability extends PureComponent {
   }
 }
 
-/**
- * Helper Methods
- */
+class CustomTooltip extends Component {
+  render() {
+    // console.log('tooltip props', this.props);
+    const {active} = this.props;
 
-const makeData = data => {
-  const graphData = [];
-  for (let i = 0; i < data.length; i++) {
-    let point = {
-      inning: data[i].about.inning,
-      play: data[i].playEvents.description,
-      uv: data[i].homeTeamWinProbability,
-      pv: data[i].awayTeamWinProbability
-    };
-    graphData.push(point);
+    if (active) {
+      const {payload, label} = this.props;
+      // console.log('tooltip label', label);
+      console.log('tooltip payload', payload);
+      return (
+        <div className="custom-tooltip">
+          <p className="label">{`${label} : ${payload[0].payload.play}`}</p>
+          {/* <p className="intro">{this.getIntroOfPage(label)}</p> */}
+          <p className="desc">Anything you want can be displayed here.</p>
+        </div>
+      );
+    }
+
+    return null;
   }
-  return graphData;
-};
+}

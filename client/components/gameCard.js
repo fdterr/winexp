@@ -46,11 +46,16 @@ class GameCard extends Component {
   componentDidMount() {
     // console.log('GC mounted', this.props);
     this.props.getWP(this.props.game.gamePk);
+    setInterval(() => {
+      // console.log('inside interval');
+      this.props.getWP(this.props.game.gamePk);
+    }, 30000);
   }
   render() {
     let homeTeam;
     let awayTeam;
 
+    // console.log('descriptions', this.props.game.descriptions);
     try {
       homeTeam = `bbclub-${nameAbbrevMatch[
         this.props.game.homeTeam
@@ -66,6 +71,10 @@ class GameCard extends Component {
       awayTeam = '';
     }
 
+    this.props.winProbability &&
+      console.log('wP length:', this.props.winProbability.length);
+    this.props.game.descriptions &&
+      console.log('descriptions.length:', this.props.game.descriptions.length);
     return (
       <Card className="gameCard">
         <Card.Content>
@@ -157,11 +166,28 @@ class GameCard extends Component {
           <div>
             <LiveCard game={this.props.game} />
             <Card.Content>
-              <WinProbability wP={makeData(this.props.winProbability)} />
+              <WinProbability
+                wP={makeData(
+                  this.props.winProbability,
+                  this.props.game.allPlays
+                )}
+                inning={this.props.game.inning}
+              />
             </Card.Content>
           </div>
         ) : this.props.game.status == 'Final' ? (
-          <FinalCard game={this.props.game} />
+          <div>
+            <FinalCard game={this.props.game} />
+            <Card.Content>
+              <WinProbability
+                wP={makeData(
+                  this.props.winProbability,
+                  this.props.game.descriptions
+                )}
+                inning={this.props.game.inning}
+              />
+            </Card.Content>
+          </div>
         ) : (
           <div />
         )}
@@ -189,17 +215,24 @@ export default connect(mapState, mapDispatch)(GameCard);
  * Helper Methods
  */
 
-const makeData = data => {
+const makeData = (data, plays) => {
+  // const graphData = [{name: 'Home', data: []}, {name: 'Away', data: []}];
   const graphData = [];
   if (data) {
     for (let i = 0; i < data.length; i++) {
       let point = {
-        inning: data[i].about.inning,
-        play: data[i].playEvents.description,
+        // inning: +data[i].about.inning + +data[i].count.outs * 0.2 * modifier,
+        inning: +data[i].about.inning,
+        play: plays[i],
         uv: data[i].homeTeamWinProbability,
         pv: data[i].awayTeamWinProbability
+        // value: bottom
+        //   ? data[i].homeTeamWinProbability
+        //   : data[i].awayTeamWinProbability
       };
       graphData.push(point);
+      // bottom ? graphData[0].data.push(point) : graphData[1].data.push(point);
+      // graphData[0].
     }
   }
   return graphData;

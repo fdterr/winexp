@@ -1,12 +1,13 @@
 import React from 'react';
 import {connect} from 'react-redux';
 import PlayerCard from './playerCard';
+import {Card} from 'semantic-ui-react';
 
 const FinalCard = props => {
   // console.log('FC props', props);
   const {game} = props;
   return (
-    <div className="finalCard">
+    <Card.Content>
       <div className="pitcherFinal">
         <div>Winning Pitcher</div>
         <PlayerCard player={{...game.decisions.winner}} />
@@ -17,7 +18,7 @@ const FinalCard = props => {
       <div className="hitterFinal">
         <div>Home Runs</div>
       </div>
-    </div>
+    </Card.Content>
   );
 };
 

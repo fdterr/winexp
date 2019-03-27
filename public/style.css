@@ -245,3 +245,16 @@ form div {
   padding-top: 0.25em !important;
   padding-bottom: 0.25em !important;
 }
+
+.graph {
+  display: flex;
+  justify-content: flex-start;
+}
+
+/* .recharts-surface {
+  padding-left: -50px !important;
+} */
+
+.recharts-wrapper {
+  margin-left: -50px !important;
+}
