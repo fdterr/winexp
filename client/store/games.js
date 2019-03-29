@@ -87,6 +87,10 @@ export const games = () => async dispatch => {
       game.preview = {};
       game.decisions = decisions(currentLiveFeed);
       // game.allPlays = currentLiveFeed.liveData.plays.allPlays;
+      console.log(
+        'getting games, allPlays is',
+        descriptions(currentLiveFeed.liveData.plays.allPlays)
+      );
       game.descriptions = descriptions(currentLiveFeed.liveData.plays.allPlays);
 
       // console.log('preview?', game.status == 'Preview');
@@ -228,6 +232,7 @@ const boxScore = async gamePk => {
 
 const todayGames = async () => {
   const {data} = await axios.get(
+    // 'http://statsapi.mlb.com/api/v1/schedule?sportId=1&date=03/25/2019'
     'http://statsapi.mlb.com/api/v1/schedule?sportId=1'
   );
   return data.dates[0].games;

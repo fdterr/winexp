@@ -71,10 +71,21 @@ class GameCard extends Component {
       awayTeam = '';
     }
 
-    this.props.winProbability &&
-      console.log('wP length:', this.props.winProbability.length);
-    this.props.game.descriptions &&
-      console.log('descriptions.length:', this.props.game.descriptions.length);
+    // this.props.winProbability &&
+    //   console.log('wP length:', this.props.winProbability.length);
+    // this.props.game.descriptions &&
+    //   console.log('descriptions.length:', this.props.game.descriptions.length);
+    try {
+      console.log(
+        'makeData props are',
+        this.props.game.homeTeam,
+        this.props.game.awayTeam,
+        this.props.winProbability,
+        this.props.game.allPlays
+      );
+    } catch (err) {
+      console.error(err);
+    }
     return (
       <Card className="gameCard">
         <Card.Content>
@@ -93,8 +104,6 @@ class GameCard extends Component {
             unstackable
             compact
           >
-            {/* <div id="one"> */}
-            {/* <div id="two"> */}
             <Table.Body className="gameTable">
               {/* Runs, Hits Errors (Top Row) */}
               <Table.Row>
@@ -169,7 +178,7 @@ class GameCard extends Component {
               <WinProbability
                 wP={makeData(
                   this.props.winProbability,
-                  this.props.game.allPlays
+                  this.props.game.descriptions
                 )}
                 inning={this.props.game.inning}
               />
@@ -216,23 +225,16 @@ export default connect(mapState, mapDispatch)(GameCard);
  */
 
 const makeData = (data, plays) => {
-  // const graphData = [{name: 'Home', data: []}, {name: 'Away', data: []}];
   const graphData = [];
   if (data) {
     for (let i = 0; i < data.length; i++) {
       let point = {
-        // inning: +data[i].about.inning + +data[i].count.outs * 0.2 * modifier,
         inning: +data[i].about.inning,
         play: plays[i],
         uv: data[i].homeTeamWinProbability,
         pv: data[i].awayTeamWinProbability
-        // value: bottom
-        //   ? data[i].homeTeamWinProbability
-        //   : data[i].awayTeamWinProbability
       };
       graphData.push(point);
-      // bottom ? graphData[0].data.push(point) : graphData[1].data.push(point);
-      // graphData[0].
     }
   }
   return graphData;

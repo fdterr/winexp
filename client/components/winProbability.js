@@ -10,10 +10,7 @@ import {
 } from 'recharts';
 
 export default class Example extends PureComponent {
-  // static jsfiddleUrl = 'https://jsfiddle.net/alidingling/xqjtetw0/';
-
   render() {
-    // console.log('wP rendered', this.props.wP);
     return (
       <div className="graph">
         {this.props.wP && (
@@ -32,10 +29,6 @@ export default class Example extends PureComponent {
             <XAxis
               dataKey="inning"
               type="category"
-              // allowDuplicatedCategory={true}
-              // interval="preserveStartEnd"
-              // tickCount={9}
-              // interval={0}
               domain={[1, this.props.inning]}
               ticks={[1, 2, 3, 4, 5, 6, 7, 8, 9]}
               margin={{left: -175}}
@@ -65,12 +58,10 @@ class CustomTooltip extends Component {
     if (active) {
       const {payload, label} = this.props;
       // console.log('tooltip label', label);
-      console.log('tooltip payload', payload);
+      // console.log('tooltip payload', payload);
       return (
         <div className="custom-tooltip">
           <p className="label">{`${label} : ${payload[0].payload.play}`}</p>
-          {/* <p className="intro">{this.getIntroOfPage(label)}</p> */}
-          <p className="desc">Anything you want can be displayed here.</p>
         </div>
       );
     }
