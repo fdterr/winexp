@@ -38,11 +38,16 @@ export default class Example extends PureComponent {
             <Legend />
             <Line
               type="monotone"
-              dataKey="pv"
+              // dataKey="pv"
+              dataKey={this.props.teams.away}
               stroke="#8884d8"
               activeDot={{r: 8}}
             />
-            <Line type="monotone" dataKey="uv" stroke="#82ca9d" />
+            <Line
+              type="monotone"
+              dataKey={this.props.teams.home}
+              stroke="#82ca9d"
+            />
           </LineChart>
         )}
       </div>
@@ -58,10 +63,21 @@ class CustomTooltip extends Component {
     if (active) {
       const {payload, label} = this.props;
       // console.log('tooltip label', label);
-      console.log('tooltip payload', payload[0].payload);
+      console.log('tooltip payload', payload);
       return (
         <div className="custom-tooltip">
-          <p className="label">{`${label} : ${payload[0].payload.play}`}</p>
+          <p className="label">
+            <strong>{payload[0].payload.inningText}</strong>
+          </p>
+          <p className="label">{payload[0].payload.play}</p>
+          <p className="label">
+            Home Team Win Probability:{' '}
+            {payload[0].payload[payload[0].payload.home]}%
+          </p>
+          <p className="label">
+            Away Team Win Probability:{' '}
+            {payload[0].payload[payload[0].payload.away]}%
+          </p>
         </div>
       );
     }

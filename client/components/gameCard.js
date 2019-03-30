@@ -180,9 +180,17 @@ class GameCard extends Component {
                   <WinProbability
                     wP={makeData(
                       this.props.winProbability,
-                      this.props.game.descriptions
+                      this.props.game.descriptions,
+                      {
+                        home: this.props.game.homeTeam,
+                        away: this.props.game.awayTeam
+                      }
                     )}
                     inning={this.props.game.inning}
+                    teams={{
+                      home: this.props.game.homeTeam,
+                      away: this.props.game.awayTeam
+                    }}
                   />
                 )}
             </Card.Content>
@@ -196,7 +204,11 @@ class GameCard extends Component {
                   <WinProbability
                     wP={makeData(
                       this.props.winProbability,
-                      this.props.game.descriptions
+                      this.props.game.descriptions,
+                      {
+                        home: this.props.game.homeTeam,
+                        away: this.props.game.awayTeam
+                      }
                     )}
                     inning={this.props.game.inning}
                   />
@@ -230,12 +242,12 @@ export default connect(mapState, mapDispatch)(GameCard);
  * Helper Methods
  */
 
-const makeData = (data, plays) => {
-  // console.log('making data', data);
-  if (data && plays && data.length !== plays.length) {
-    console.log('lengths:', data.length, plays.length);
-    // console.log('length mismatch', data, plays);
-  }
+const makeData = (data, plays, teams) => {
+  console.log('making data', data, plays, teams);
+  // if (data && plays && data.length !== plays.length) {
+  //   console.log('lengths:', data.length, plays.length);
+  //   // console.log('length mismatch', data, plays);
+  // }
   if (plays[plays.length - 1] == undefined) {
     plays.pop();
     console.log(
@@ -254,15 +266,22 @@ const makeData = (data, plays) => {
     for (let i = 0; i < data.length; i++) {
       let point = {
         inning: +data[i].about.inning,
-        inningText: data[i].about.halfInning + data[i].about.inning,
+        inningText:
+          data[i].about.halfInning.charAt(0).toUpperCase() +
+          data[i].about.halfInning.slice(1) +
+          ' ' +
+          data[i].about.inning,
         change: data[i].homeTeamWinProbabilityAdded,
         play: plays[i],
-        uv: data[i].homeTeamWinProbability,
-        pv: data[i].awayTeamWinProbability
+        [teams.home]: Math.round(data[i].homeTeamWinProbability * 10) / 10,
+        [teams.away]: Math.round(data[i].awayTeamWinProbability * 10) / 10,
+        home: teams.home,
+        away: teams.away
       };
       if (point.play == undefined) {
         console.log('undefined point', data, plays);
       }
+      // console.log('point is', point);
       graphData.push(point);
     }
   }
