@@ -1,24 +1,50 @@
-import React from 'react';
+import React, {Component} from 'react';
 import {connect} from 'react-redux';
+import {Header, Segment, TransitionablePortal} from 'semantic-ui-react';
 
-const Player = props => {
-  // console.log('player', props.player.id);
-  return (
-    <div className="flexCenter">
-      <img
-        className="mugshot"
-        src={`https://gd.mlb.com/images/gameday/mugshots/mlb/${props.player
-          .id || 0}.jpg`}
-        onError={e => {
-          e.target.onerror = null;
-          e.target.src =
-            'https://prod-gameday.mlbstatic.com/responsive-gameday-assets/1.2.0/images/players/player-default@2x.png';
-        }}
-      />
-      <div className="playerName">{props.player.fullName || 'n/a'}</div>
-    </div>
-  );
-};
+class Player extends Component {
+  constructor() {
+    super();
+    this.state = {open: false};
+  }
+  // console.log('player', this.props.player.id);
+  handleClick = () => {
+    this.setState({...this.state, open: !this.state.open});
+  };
+
+  handleClose = () => {
+    this.setState({...this.state, open: false});
+  };
+  render() {
+    const {open} = this.state;
+    return (
+      <div className="flexCenter">
+        <img
+          className="mugshot"
+          src={`https://gd.mlb.com/images/gameday/mugshots/mlb/${this.props
+            .player.id || 0}.jpg`}
+          onError={e => {
+            e.target.onerror = null;
+            e.target.src =
+              'https://prod-gameday.mlbstatic.com/responsive-gameday-assets/1.2.0/images/players/player-default@2x.png';
+          }}
+        />
+        <div onClick={this.handleClick} className="playerName">
+          {this.props.player.fullName || 'n/a'}
+        </div>
+        <TransitionablePortal onClose={this.handleClose} open={open}>
+          <Segment
+            style={{left: '40%', position: 'fixed', top: '50%', zIndex: 1000}}
+          >
+            <Header>This is a controlled portal</Header>
+            <p>Portals have tons of great callback functions to hook into.</p>
+            <p>To close, simply click the close button or click away</p>
+          </Segment>
+        </TransitionablePortal>
+      </div>
+    );
+  }
+}
 
 const mapState = (state, ownProps) => {
   // console.log('ownprops', ownProps.player);
