@@ -87,10 +87,10 @@ export const games = () => async dispatch => {
       game.preview = {};
       game.decisions = decisions(currentLiveFeed);
       // game.allPlays = currentLiveFeed.liveData.plays.allPlays;
-      console.log(
-        'getting games, allPlays is',
-        descriptions(currentLiveFeed.liveData.plays.allPlays)
-      );
+      // console.log(
+      //   'getting games, allPlays is',
+      //   descriptions(currentLiveFeed.liveData.plays.allPlays)
+      // );
       game.descriptions = descriptions(currentLiveFeed.liveData.plays.allPlays);
 
       // console.log('preview?', game.status == 'Preview');

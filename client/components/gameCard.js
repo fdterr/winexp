@@ -75,17 +75,17 @@ class GameCard extends Component {
     //   console.log('wP length:', this.props.winProbability.length);
     // this.props.game.descriptions &&
     //   console.log('descriptions.length:', this.props.game.descriptions.length);
-    try {
-      console.log(
-        'makeData props are',
-        this.props.game.homeTeam,
-        this.props.game.awayTeam,
-        this.props.winProbability,
-        this.props.game.allPlays
-      );
-    } catch (err) {
-      console.error(err);
-    }
+    // try {
+    //   console.log(
+    //     'makeData props are',
+    //     this.props.game.homeTeam,
+    //     this.props.game.awayTeam,
+    //     this.props.winProbability,
+    //     this.props.game.allPlays
+    //   );
+    // } catch (err) {
+    //   console.error(err);
+    // }
     return (
       <Card className="gameCard">
         <Card.Content>
@@ -175,26 +175,32 @@ class GameCard extends Component {
           <div>
             <LiveCard game={this.props.game} />
             <Card.Content>
-              <WinProbability
-                wP={makeData(
-                  this.props.winProbability,
-                  this.props.game.descriptions
+              {this.props.winProbability &&
+                this.props.game.descriptions && (
+                  <WinProbability
+                    wP={makeData(
+                      this.props.winProbability,
+                      this.props.game.descriptions
+                    )}
+                    inning={this.props.game.inning}
+                  />
                 )}
-                inning={this.props.game.inning}
-              />
             </Card.Content>
           </div>
         ) : this.props.game.status == 'Final' ? (
           <div>
             <FinalCard game={this.props.game} />
             <Card.Content>
-              <WinProbability
-                wP={makeData(
-                  this.props.winProbability,
-                  this.props.game.descriptions
+              {this.props.winProbability &&
+                this.props.game.descriptions && (
+                  <WinProbability
+                    wP={makeData(
+                      this.props.winProbability,
+                      this.props.game.descriptions
+                    )}
+                    inning={this.props.game.inning}
+                  />
                 )}
-                inning={this.props.game.inning}
-              />
             </Card.Content>
           </div>
         ) : (
@@ -225,15 +231,38 @@ export default connect(mapState, mapDispatch)(GameCard);
  */
 
 const makeData = (data, plays) => {
+  // console.log('making data', data);
+  if (data && plays && data.length !== plays.length) {
+    console.log('lengths:', data.length, plays.length);
+    // console.log('length mismatch', data, plays);
+  }
+  if (plays[plays.length - 1] == undefined) {
+    plays.pop();
+    console.log(
+      'popped from plays, data length:',
+      data.length,
+      'plays length',
+      plays.length
+    );
+    while (data.length > plays.length) {
+      data.pop();
+    }
+    console.log('post-balancing, data:', data.length, 'plays:', plays.length);
+  }
   const graphData = [];
   if (data) {
     for (let i = 0; i < data.length; i++) {
       let point = {
         inning: +data[i].about.inning,
+        inningText: data[i].about.halfInning + data[i].about.inning,
+        change: data[i].homeTeamWinProbabilityAdded,
         play: plays[i],
         uv: data[i].homeTeamWinProbability,
         pv: data[i].awayTeamWinProbability
       };
+      if (point.play == undefined) {
+        console.log('undefined point', data, plays);
+      }
       graphData.push(point);
     }
   }
