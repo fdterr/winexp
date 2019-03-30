@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import {Header, Segment, TransitionablePortal} from 'semantic-ui-react';
+import Draggable from 'react-draggable'; // The default
 
 class Player extends Component {
   constructor() {
