@@ -53,7 +53,7 @@ class GameCard extends Component {
   };
 
   componentDidMount() {
-    // console.log('GC mounted', this.props);
+    console.log('GC mounted', this.props);
     this.props.getWP(this.props.game.gamePk);
     setInterval(() => {
       // console.log('inside interval');
@@ -81,6 +81,7 @@ class GameCard extends Component {
     } catch (err) {
       awayTeam = '';
     }
+    console.log('gc props', this.props);
 
     // this.props.winProbability &&
     //   console.log('wP length:', this.props.winProbability.length);
@@ -98,7 +99,7 @@ class GameCard extends Component {
     //   console.error(err);
     // }
     return (
-      <Card inverted className="gameCard">
+      <Card className="gameCard">
         <Card.Content>
           <Card.Header>
             {this.props.game.status} -{' '}
@@ -184,7 +185,7 @@ class GameCard extends Component {
         ) : this.props.game.status == 'Live' ||
         this.props.game.status == 'In Progress' ? (
           <div>
-            <LiveCard game={this.props.game} />
+            <LiveCard game={this.props.game} popup={this.props.popup} />
             <Card.Content>
               {this.props.winProbability &&
                 this.props.game.descriptions && (

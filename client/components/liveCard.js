@@ -22,6 +22,7 @@ const LiveCard = props => {
   //   group: 'hitting'
   // });
 
+  console.log('lC props', props);
   return (
     <Card.Content>
       <div className="situation">
@@ -34,6 +35,7 @@ const LiveCard = props => {
               id: props.game.pitcher.id
             }}
             live={true}
+            popup={props.popup}
           />
         </div>
         <div className="situationPlayer">
@@ -44,6 +46,7 @@ const LiveCard = props => {
               id: props.game.batter.id
             }}
             live={true}
+            popup={props.popup}
           />
         </div>
         <div className="infoGraphic">

@@ -7,7 +7,7 @@ const FinalCard = props => {
   // console.log('FC props', props);
   const {game} = props;
   return (
-    <Card.Content className="finalPitchers">
+    <Card.Content>
       <div className="pitcherFinal">
         <div>
           {/* {game.decisions.winner.fullName} */}

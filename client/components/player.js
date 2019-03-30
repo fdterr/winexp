@@ -1,13 +1,69 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
-import {Header, Segment, TransitionablePortal} from 'semantic-ui-react';
-import Draggable from 'react-draggable'; // The default
+// import {Header, Segment, TransitionablePortal} from 'semantic-ui-react';
 
 class Player extends Component {
   constructor() {
     super();
     this.state = {open: false};
   }
+  getInitialState = () => {
+    return {
+      activeDrags: 0,
+      deltaPosition: {
+        x: 0,
+        y: 0
+      },
+      controlledPosition: {
+        x: -400,
+        y: 200
+      }
+    };
+  };
+
+  handleDrag = (e, ui) => {
+    const {x, y} = this.state.deltaPosition;
+    this.setState({
+      deltaPosition: {
+        x: x + ui.deltaX,
+        y: y + ui.deltaY
+      }
+    });
+  };
+
+  // onStart = () => {
+  //   this.setState({activeDrags: ++this.state.activeDrags});
+  // };
+
+  // onStop = () => {
+  //   this.setState({activeDrags: --this.state.activeDrags});
+  // };
+
+  // For controlled component
+  adjustXPos = e => {
+    e.preventDefault();
+    e.stopPropagation();
+    const {x, y} = this.state.controlledPosition;
+    this.setState({controlledPosition: {x: x - 10, y}});
+  };
+
+  adjustYPos = e => {
+    e.preventDefault();
+    e.stopPropagation();
+    const {controlledPosition} = this.state;
+    const {x, y} = controlledPosition;
+    this.setState({controlledPosition: {x, y: y - 10}});
+  };
+
+  onControlledDrag = (e, position) => {
+    const {x, y} = position;
+    this.setState({controlledPosition: {x, y}});
+  };
+
+  onControlledDragStop = (e, position) => {
+    this.onControlledDrag(e, position);
+    this.onStop();
+  };
   // console.log('player', this.props.player.id);
   handleClick = () => {
     this.setState({...this.state, open: !this.state.open});
@@ -17,7 +73,12 @@ class Player extends Component {
     this.setState({...this.state, open: false});
   };
   render() {
+    console.log('player props', this.props);
+    const dragHandlers = {onStart: this.onStart, onStop: this.onStop};
+    const {deltaPosition, controlledPosition} = this.state;
     const {open} = this.state;
+    const handleVisibility = this.props.popup;
+    console.log('hV prop', handleVisibility);
     return (
       <div className="flexCenter">
         <img
@@ -30,18 +91,43 @@ class Player extends Component {
               'https://prod-gameday.mlbstatic.com/responsive-gameday-assets/1.2.0/images/players/player-default@2x.png';
           }}
         />
-        <div onClick={this.handleClick} className="playerName">
+        <div onClick={handleVisibility} className="playerName">
           {this.props.player.fullName || 'n/a'}
         </div>
-        <TransitionablePortal onClose={this.handleClose} open={open}>
-          <Segment
-            style={{left: '40%', position: 'fixed', top: '50%', zIndex: 1000}}
+        {/* <div>
+
+          <Draggable
+            axis="x"
+            handle=".handle"
+            defaultPosition={{x: 0, y: 0}}
+            position={null}
+            grid={[25, 25]}
+            scale={1}
+            onStart={this.handleStart}
+            onDrag={this.handleDrag}
+            onStop={this.handleStop}
           >
-            <Header>This is a controlled portal</Header>
-            <p>Portals have tons of great callback functions to hook into.</p>
-            <p>To close, simply click the close button or click away</p>
-          </Segment>
-        </TransitionablePortal>
+            <TransitionablePortal onClose={this.handleClose} open={open}>
+              <Segment
+                style={{
+                  left: '40%',
+                  position: 'fixed',
+                  top: '50%',
+                  zIndex: 1000
+                }}
+              >
+                <Header>This is a controlled portal</Header>
+                <strong className="handle">
+                  <div>Drag here</div>
+                </strong>
+                <p>
+                  Portals have tons of great callback functions to hook into.
+                </p>
+                <p>To close, simply click the close button or click away</p>
+              </Segment>
+            </TransitionablePortal>
+          </Draggable>
+        </div> */}
       </div>
     );
   }
