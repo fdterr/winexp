@@ -78,7 +78,7 @@ class Player extends Component {
     const {deltaPosition, controlledPosition} = this.state;
     const {open} = this.state;
     const handleVisibility = this.props.popup;
-    console.log('hV prop', handleVisibility);
+    // console.log('hV prop', handleVisibility);
     return (
       <div className="flexCenter">
         <img

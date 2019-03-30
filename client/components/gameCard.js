@@ -6,6 +6,8 @@ import FinalCard from './FinalCard';
 import WinProbability from './winProbability';
 import {connect} from 'react-redux';
 import {winProbability} from '../store';
+import faker from 'faker';
+import _ from 'lodash';
 
 const nameAbbrevMatch = {
   'Boston Red Sox': 'BOS',
@@ -39,6 +41,12 @@ const nameAbbrevMatch = {
   'San Francisco Giants': 'SFN',
   'San Diego Padres': 'SDN'
 };
+
+const panels = _.times(3, i => ({
+  key: `panel-${i}`,
+  title: faker.lorem.sentence(),
+  content: faker.lorem.paragraphs()
+}));
 
 class GameCard extends Component {
   // console.log('gameCard this.props', this.props);
@@ -81,7 +89,7 @@ class GameCard extends Component {
     } catch (err) {
       awayTeam = '';
     }
-    console.log('gc props', this.props);
+    // console.log('gc props', this.props);
 
     // this.props.winProbability &&
     //   console.log('wP length:', this.props.winProbability.length);
@@ -236,7 +244,7 @@ class GameCard extends Component {
           <div />
         )}
         <div className="accordionContainer">
-          <Accordion fluid styled>
+          {/* <Accordion fluid styled exclusive={false} defaultActiveIndex={[0, 2]}>
             <Accordion.Title
               active={activeIndex === 0}
               index={0}
@@ -291,7 +299,14 @@ class GameCard extends Component {
                 who may not find one so readily.
               </p>
             </Accordion.Content>
-          </Accordion>
+          </Accordion> */}
+          <Accordion
+            defaultActiveIndex={[0, 2]}
+            panels={panels}
+            exclusive={false}
+            fluid
+            styled
+          />
         </div>
       </Card>
     );
@@ -318,11 +333,11 @@ export default connect(mapState, mapDispatch)(GameCard);
  */
 
 const makeData = (data, plays, teams) => {
-  console.log('making data', data, plays, teams);
-  // if (data && plays && data.length !== plays.length) {
-  //   console.log('lengths:', data.length, plays.length);
-  //   // console.log('length mismatch', data, plays);
-  // }
+  if (data && plays && data.length !== plays.length) {
+    console.log('lengths mismatch', data.length, plays.length);
+    // console.log('making data', data, plays, teams);
+    // console.log('length mismatch', data, plays);
+  }
   if (plays[plays.length - 1] == undefined) {
     plays.pop();
     console.log(
@@ -335,6 +350,9 @@ const makeData = (data, plays, teams) => {
       data.pop();
     }
     console.log('post-balancing, data:', data.length, 'plays:', plays.length);
+  } else if (data.length > plays.length) {
+    plays.push('Play pending');
+    console.log('data longer, pushed undefined', data.length, plays.length);
   }
   const graphData = [];
   if (data) {
@@ -354,7 +372,8 @@ const makeData = (data, plays, teams) => {
         away: teams.away
       };
       if (point.play == undefined) {
-        console.log('undefined point', data, plays);
+        // console.log('undefined point', data, plays);
+        console.log('undefined point', data.length, plays.length);
       }
       // console.log('point is', point);
       graphData.push(point);

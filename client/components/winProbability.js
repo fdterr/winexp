@@ -63,7 +63,7 @@ class CustomTooltip extends Component {
     if (active) {
       const {payload, label} = this.props;
       // console.log('tooltip label', label);
-      console.log('tooltip payload', payload);
+      // console.log('tooltip payload', payload);
       return (
         <div className="custom-tooltip">
           <p className="label">
