@@ -258,3 +258,19 @@ form div {
 .recharts-wrapper {
   margin-left: -50px !important;
 }
+
+.accordionContainer {
+  width: 365px;
+  /* width: 99%; */
+  /* margin-left: auto; */
+  /* margin-right: auto; */
+}
+
+.pitcherFinal {
+  display: flex;
+  flex-direction: column;
+}
+
+.finalPitchers {
+  display: flex;
+}

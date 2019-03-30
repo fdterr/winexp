@@ -5,9 +5,6 @@ const PlayerCard = props => {
   // console.log('player', props.player.id);
   return (
     <div className="flexCenter">
-      {!props.live && (
-        <div className="playerName">{props.player.fullName || 'n/a'}</div>
-      )}
       <div className="imageStats">
         <div>
           <img

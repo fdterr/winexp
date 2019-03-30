@@ -7,17 +7,21 @@ const FinalCard = props => {
   // console.log('FC props', props);
   const {game} = props;
   return (
-    <Card.Content>
+    <Card.Content className="finalPitchers">
       <div className="pitcherFinal">
-        <div>Winning Pitcher</div>
-        <PlayerCard player={{...game.decisions.winner}} />
-        <div>Losing Pitcher</div>
-        <PlayerCard player={{...game.decisions.loser}} />
-        <div>Save</div>
+        <div>
+          {/* {game.decisions.winner.fullName} */}
+          Winning Pitcher
+        </div>
+        <PlayerCard live={false} player={{...game.decisions.winner}} />
       </div>
-      <div className="hitterFinal">
+      <div className="pitcherFinal">
+        Losing Pitcher
+        <PlayerCard live={false} player={{...game.decisions.loser}} />
+      </div>
+      {/* <div className="hitterFinal">
         <div>Home Runs</div>
-      </div>
+      </div> */}
     </Card.Content>
   );
 };
