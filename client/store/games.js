@@ -93,8 +93,12 @@ export const games = () => async dispatch => {
       // );
       game.descriptions = descriptions(currentLiveFeed.liveData.plays.allPlays);
 
-      // console.log('preview?', game.status == 'Preview');
-      if (game.status == 'Preview') {
+      if (
+        game.status == 'Preview' ||
+        game.status == 'Pre-Game' ||
+        game.status == 'Warmup' ||
+        game.status == 'Scheduled'
+      ) {
         const {homeProbable, awayProbable} = probablePitchers(currentLiveFeed);
         // console.log('homeProbable', homeProbable);
         game.homeProbable = homeProbable;

@@ -43,7 +43,7 @@ const nameAbbrevMatch = {
 };
 
 const panels = _.times(3, i => ({
-  key: `panel-${i}`,
+  key: `panel-${i + 1}`,
   title: faker.lorem.sentence(),
   content: faker.lorem.paragraphs()
 }));
@@ -61,7 +61,7 @@ class GameCard extends Component {
   };
 
   componentDidMount() {
-    console.log('GC mounted', this.props);
+    // console.log('GC mounted', this.props);
     this.props.getWP(this.props.game.gamePk);
     setInterval(() => {
       // console.log('inside interval');
@@ -74,7 +74,7 @@ class GameCard extends Component {
     let homeTeam;
     let awayTeam;
 
-    // console.log('descriptions', this.props.game.descriptions);
+    console.log('GC Props', this.props.game);
     try {
       homeTeam = `bbclub-${nameAbbrevMatch[
         this.props.game.homeTeam
@@ -89,23 +89,51 @@ class GameCard extends Component {
     } catch (err) {
       awayTeam = '';
     }
-    // console.log('gc props', this.props);
 
-    // this.props.winProbability &&
-    //   console.log('wP length:', this.props.winProbability.length);
-    // this.props.game.descriptions &&
-    //   console.log('descriptions.length:', this.props.game.descriptions.length);
-    // try {
-    //   console.log(
-    //     'makeData props are',
-    //     this.props.game.homeTeam,
-    //     this.props.game.awayTeam,
-    //     this.props.winProbability,
-    //     this.props.game.allPlays
-    //   );
-    // } catch (err) {
-    //   console.error(err);
-    // }
+    if (
+      panels.length === 3 &&
+      this.props.winProbability &&
+      this.props.game.descriptions &&
+      this.props.winProbability.length > 0 &&
+      this.props.game.descriptions.length > 0 &&
+      this.props.game.status !== 'Pre-Game' &&
+      this.props.game.status !== 'Warmup' &&
+      this.props.game.status !== 'Scheduled'
+    ) {
+      // console.log('should be in here');
+      let newPanel = {
+        key: 'panel-0',
+        title: 'Win Probability',
+        content: {
+          content: (
+            <WinProbability
+              wP={makeData(
+                this.props.winProbability,
+                this.props.game.descriptions,
+                {
+                  home: this.props.game.homeTeam,
+                  away: this.props.game.awayTeam
+                }
+              )}
+              inning={this.props.game.inning}
+              teams={{
+                home: this.props.game.homeTeam,
+                away: this.props.game.awayTeam
+              }}
+            />
+          )
+        }
+      };
+      panels.unshift(newPanel);
+    }
+    console.log(
+      'panels = ',
+      panels,
+      panels.length === 3 &&
+        !!this.props.winProbability &&
+        !!this.props.game.descriptions &&
+        this.props.game.status !== 'Pre-Game'
+    );
     return (
       <Card className="gameCard">
         <Card.Content>
@@ -183,7 +211,10 @@ class GameCard extends Component {
             {/* </div> */}
           </Table>
         </Card.Content>
-        {this.props.game.status == 'Preview' ? (
+        {this.props.game.status == 'Preview' ||
+        this.props.game.status == 'Pre-Game' ||
+        this.props.game.status == 'Warmup' ||
+        this.props.game.status == 'Scheduled' ? (
           <PreviewCard
             preview={{
               homeProbable: this.props.game.homeProbable,
@@ -194,7 +225,7 @@ class GameCard extends Component {
         this.props.game.status == 'In Progress' ? (
           <div>
             <LiveCard game={this.props.game} popup={this.props.popup} />
-            <Card.Content>
+            {/* <Card.Content>
               {this.props.winProbability &&
                 this.props.game.descriptions && (
                   <WinProbability
@@ -213,13 +244,13 @@ class GameCard extends Component {
                     }}
                   />
                 )}
-            </Card.Content>
+            </Card.Content> */}
           </div>
         ) : this.props.game.status == 'Final' ||
         this.props.game.status == 'Game Over' ? (
           <div>
             <FinalCard game={this.props.game} />
-            <Card.Content>
+            {/* <Card.Content>
               {this.props.winProbability &&
                 this.props.game.descriptions && (
                   <WinProbability
@@ -238,70 +269,14 @@ class GameCard extends Component {
                     }}
                   />
                 )}
-            </Card.Content>
+            </Card.Content> */}
           </div>
         ) : (
           <div />
         )}
         <div className="accordionContainer">
-          {/* <Accordion fluid styled exclusive={false} defaultActiveIndex={[0, 2]}>
-            <Accordion.Title
-              active={activeIndex === 0}
-              index={0}
-              onClick={this.handleClick}
-            >
-              <Icon name="dropdown" />
-              What is a dog?
-            </Accordion.Title>
-            <Accordion.Content active={activeIndex === 0}>
-              <p>
-                A dog is a type of domesticated animal. Known for its loyalty
-                and faithfulness, it can be found as a welcome guest in many
-                households across the world.
-              </p>
-            </Accordion.Content>
-
-            <Accordion.Title
-              active={activeIndex === 1}
-              index={1}
-              onClick={this.handleClick}
-            >
-              <Icon name="dropdown" />
-              What kinds of dogs are there?
-            </Accordion.Title>
-            <Accordion.Content active={activeIndex === 1}>
-              <p>
-                There are many breeds of dogs. Each breed varies in size and
-                temperament. Owners often select a breed of dog that they find
-                to be compatible with their own lifestyle and desires from a
-                companion.
-              </p>
-            </Accordion.Content>
-
-            <Accordion.Title
-              active={activeIndex === 2}
-              index={2}
-              onClick={this.handleClick}
-            >
-              <Icon name="dropdown" />
-              How do you acquire a dog?
-            </Accordion.Title>
-            <Accordion.Content active={activeIndex === 2}>
-              <p>
-                Three common ways for a prospective owner to acquire a dog is
-                from pet shops, private owners, or shelters.
-              </p>
-              <p>
-                A pet shop may be the most convenient way to buy a dog. Buying a
-                dog from a private owner allows you to assess the pedigree and
-                upbringing of your dog before choosing to take it home. Lastly,
-                finding your dog from a shelter, helps give a good home to a dog
-                who may not find one so readily.
-              </p>
-            </Accordion.Content>
-          </Accordion> */}
           <Accordion
-            defaultActiveIndex={[0, 2]}
+            // defaultActiveIndex={[]}
             panels={panels}
             exclusive={false}
             fluid
@@ -333,12 +308,12 @@ export default connect(mapState, mapDispatch)(GameCard);
  */
 
 const makeData = (data, plays, teams) => {
-  if (data && plays && data.length !== plays.length) {
-    console.log('lengths mismatch', data.length, plays.length);
-    // console.log('making data', data, plays, teams);
-    // console.log('length mismatch', data, plays);
-  }
+  // if (data && plays && data.length !== plays.length) {
+  //   console.log('lengths mismatch', data.length, plays.length);
+  //   // console.log('making data', data, plays, teams);
+  // }
   if (plays[plays.length - 1] == undefined) {
+    console.log('length mismatch', data, plays);
     plays.pop();
     console.log(
       'popped from plays, data length:',
