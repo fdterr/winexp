@@ -42,12 +42,6 @@ const nameAbbrevMatch = {
   'San Diego Padres': 'SDN'
 };
 
-const panels = _.times(3, i => ({
-  key: `panel-${i + 1}`,
-  title: faker.lorem.sentence(),
-  content: faker.lorem.paragraphs()
-}));
-
 class GameCard extends Component {
   // console.log('gameCard this.props', this.props);
   state = {activeIndex: 0};
@@ -61,20 +55,36 @@ class GameCard extends Component {
   };
 
   componentDidMount() {
-    // console.log('GC mounted', this.props);
-    this.props.getWP(this.props.game.gamePk);
-    setInterval(() => {
-      // console.log('inside interval');
+    console.log('GC mounted', this.props);
+    if (
+      // this.props.winProbability &&
+      // this.props.game.descriptions &&
+      // this.props.winProbability.length > 0 &&
+      // this.props.game.descriptions.length > 0 &&
+      this.props.game.status !== 'Pre-Game' &&
+      this.props.game.status !== 'Warmup' &&
+      this.props.game.status !== 'Scheduled'
+    ) {
+      console.log('GC mount performing');
       this.props.getWP(this.props.game.gamePk);
-    }, 30000);
+      setInterval(() => {
+        // console.log('inside interval');
+        this.props.getWP(this.props.game.gamePk);
+      }, 30000);
+    }
   }
   render() {
+    const panels = _.times(3, i => ({
+      key: `panel-${i + 1}`,
+      title: faker.lorem.sentence(),
+      content: faker.lorem.paragraphs()
+    }));
+
     const {activeIndex} = this.state;
 
     let homeTeam;
     let awayTeam;
 
-    console.log('GC Props', this.props.game);
     try {
       homeTeam = `bbclub-${nameAbbrevMatch[
         this.props.game.homeTeam
@@ -100,7 +110,45 @@ class GameCard extends Component {
       this.props.game.status !== 'Warmup' &&
       this.props.game.status !== 'Scheduled'
     ) {
-      // console.log('should be in here');
+      console.log(
+        'panels = ',
+        panels.length === 3,
+        this.props.winProbability,
+        this.props.game.descriptions,
+        this.props.winProbability.length > 0,
+        this.props.game.descriptions.length > 0,
+        this.props.game.status !== 'Pre-Game',
+        this.props.game.status !== 'Warmup',
+        this.props.game.status !== 'Scheduled'
+      );
+      console.log('GC Props', this.props.game);
+
+      let newPanel = {
+        key: 'panel-0',
+        title: 'Win Probability',
+        content: {
+          content: (
+            <WinProbability
+              wP={makeData(
+                this.props.winProbability,
+                this.props.game.descriptions,
+                {
+                  home: this.props.game.homeTeam,
+                  away: this.props.game.awayTeam
+                }
+              )}
+              inning={this.props.game.inning}
+              teams={{
+                home: this.props.game.homeTeam,
+                away: this.props.game.awayTeam
+              }}
+            />
+          )
+        }
+      };
+      panels.unshift(newPanel);
+    } else if (panels.length === 4) {
+      panels.shift();
       let newPanel = {
         key: 'panel-0',
         title: 'Win Probability',
@@ -126,14 +174,7 @@ class GameCard extends Component {
       };
       panels.unshift(newPanel);
     }
-    console.log(
-      'panels = ',
-      panels,
-      panels.length === 3 &&
-        !!this.props.winProbability &&
-        !!this.props.game.descriptions &&
-        this.props.game.status !== 'Pre-Game'
-    );
+
     return (
       <Card className="gameCard">
         <Card.Content>
@@ -312,6 +353,7 @@ const makeData = (data, plays, teams) => {
   //   console.log('lengths mismatch', data.length, plays.length);
   //   // console.log('making data', data, plays, teams);
   // }
+  console.log('makingData', teams);
   if (plays[plays.length - 1] == undefined) {
     console.log('length mismatch', data, plays);
     plays.pop();
@@ -329,7 +371,7 @@ const makeData = (data, plays, teams) => {
     plays.push('Play pending');
     console.log('data longer, pushed undefined', data.length, plays.length);
   }
-  const graphData = [];
+  let graphData = [];
   if (data) {
     for (let i = 0; i < data.length; i++) {
       let point = {
